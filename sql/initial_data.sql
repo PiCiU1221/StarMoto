@@ -147,21 +147,7 @@ VALUES ('Small Car'),
        ('Sedan'),
        ('SUV');
 
--- Sample cars insertions
-
-INSERT INTO cars (seller_id, model_id, type_id, condition_id, color_id, fuel_type_id, transmission_id, production_year, price, mileage, doors_id, seats_id, horsepower, engine_capacity, description, drivetrain_id)
-VALUES (1, 5, 2, 1, 8, 2, 2, 2019, 30000.00, 40000, 2, 2, 180, 2200, 'Luxury sedan with advanced features', 2);
-
-INSERT INTO cars (seller_id, model_id, type_id, condition_id, color_id, fuel_type_id, transmission_id, production_year, price, mileage, doors_id, seats_id, horsepower, engine_capacity, description, drivetrain_id)
-VALUES (1, 9, 5, 1, 12, 3, 2, 2022, 40000.00, 20000, 4, 4, 250, 3000, 'SUV for off-road adventures', 3);
-
-INSERT INTO cars (seller_id, model_id, type_id, condition_id, color_id, fuel_type_id, transmission_id, production_year, price, mileage, doors_id, seats_id, horsepower, engine_capacity, description, drivetrain_id)
-VALUES (2, 16, 3, 1, 1, 2, 1, 2021, 35000.00, 30000, 3, 3, 200, 2500, 'Compact car for city driving', 1);
-
-INSERT INTO cars (seller_id, model_id, type_id, condition_id, color_id, fuel_type_id, transmission_id, production_year, price, mileage, doors_id, seats_id, horsepower, engine_capacity, description, drivetrain_id)
-VALUES (2, 20, 2, 2, 5, 3, 1, 2020, 28000.00, 45000, 5, 5, 160, 1800, 'Minivan with spacious interior', 2);
-
--- Insert car data and capture car_id
+-- Sample cars insertions with features
 
 -- First car
 WITH inserted_cars AS (
