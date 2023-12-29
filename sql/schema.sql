@@ -86,7 +86,7 @@ CREATE TABLE car_images
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE car
+CREATE TABLE cars
 (
     car_id          SERIAL PRIMARY KEY,
     seller_id       INTEGER REFERENCES users ON DELETE CASCADE,
@@ -97,7 +97,7 @@ CREATE TABLE car
     fuel_type_id    INTEGER REFERENCES car_fuel_type,
     transmission_id INTEGER REFERENCES car_transmission_type,
     production_year INTEGER,
-    price           NUMERIC(10, 2),
+    price           INTEGER,
     mileage         INTEGER,
     doors_id        INTEGER REFERENCES car_door_count,
     seats_id        INTEGER REFERENCES car_seat_count,
@@ -110,16 +110,16 @@ CREATE TABLE car
     drivetrain_id   INTEGER REFERENCES car_drivetrain_type
 );
 
-CREATE TABLE car_feature_junction
+CREATE TABLE car_features_junction
 (
-    car_id     INTEGER NOT NULL REFERENCES car ON DELETE CASCADE,
-    feature_id INTEGER NOT NULL REFERENCES car_feature ON DELETE CASCADE,
+    car_id     INTEGER NOT NULL REFERENCES cars ON DELETE CASCADE,
+    feature_id INTEGER NOT NULL REFERENCES car_features ON DELETE CASCADE,
     PRIMARY KEY (car_id, feature_id)
 );
 
 CREATE TABLE car_images_junction
 (
     car_id   INTEGER REFERENCES cars (car_id) ON DELETE CASCADE,
-    image_id INTEGER REFERENCES cars_images (image_id) ON DELETE CASCADE,
+    image_id INTEGER REFERENCES car_images (image_id) ON DELETE CASCADE,
     PRIMARY KEY (car_id, image_id)
 );

@@ -9,8 +9,11 @@ import com.piciu1221.starmoto.repository.UserRepository;
 import com.piciu1221.starmoto.repository.reference.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,7 +32,11 @@ public class CarService {
     private final CarSeatCountRepository carSeatCountRepository;
     private final CarDrivetrainTypeRepository carDrivetrainTypeRepository;
     private final CarFeatureRepository carFeatureRepository;
+    private final CarImageRepository carImageRepository;
 
+    private final CarImageService carImageService;
+
+    @Transactional
     public Car addCar(CarAddRequestDTO carAddRequestDTO) throws IOException {
         User seller = userRepository.findById(carAddRequestDTO.getSellerId())
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
@@ -69,6 +76,30 @@ public class CarService {
                 transmissionType, doors, seats, drivetrainType, features);
 
         // Save the car entity to the database
-        return carRepository.save(car);
+        Car savedCar = carRepository.save(car);
+
+        // Upload images
+        List<CarImage> carImages = new ArrayList<>();
+        for (MultipartFile image : carAddRequestDTO.getImages()) {
+            String imageUrl = carImageService.uploadImage(image);
+
+            if (imageUrl != null) {
+                // Create a CarImage entity for each uploaded image
+                CarImage carImage = new CarImage();
+                carImage.setImageUrl(imageUrl);
+                carImages.add(carImage);
+            } else {
+                throw new RuntimeException("Failed to upload one or more images");
+            }
+        }
+
+        // Save the car images to the database
+        carImages = carImageRepository.saveAll(carImages);
+
+        // Link Car and CarImage entities
+        savedCar.setImages(carImages);
+        carRepository.save(savedCar); // Update the car entity with image associations
+
+        return savedCar;
     }
 }

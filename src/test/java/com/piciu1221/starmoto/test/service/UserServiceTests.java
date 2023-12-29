@@ -1,6 +1,5 @@
 package com.piciu1221.starmoto.test.service;
 
-import com.piciu1221.starmoto.dto.ApiResponse;
 import com.piciu1221.starmoto.dto.RegistrationRequest;
 import com.piciu1221.starmoto.exception.EmailTakenException;
 import com.piciu1221.starmoto.exception.UsernameTakenException;
@@ -14,14 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -49,8 +47,8 @@ class UserServiceTests {
     void testRegisterUser_Success() {
         // Arrange
         RegistrationRequest registrationRequest = new RegistrationRequest();
-        registrationRequest.setUsername("testUser");
-        registrationRequest.setEmail("test@example.com");
+        registrationRequest.setUsername("newUser");
+        registrationRequest.setEmail("new@example.com");
         registrationRequest.setPassword("testPassword");
 
         User mockUser = new User();
@@ -79,18 +77,14 @@ class UserServiceTests {
         // Arrange
         RegistrationRequest registrationRequest = new RegistrationRequest();
         registrationRequest.setUsername("existingUser");
-        registrationRequest.setEmail("existing@example.com");
-        registrationRequest.setPassword("existingPassword");
+        registrationRequest.setEmail("new@example.com");
+        registrationRequest.setPassword("testPassword");
 
         // Mock the repository behavior to simulate an existing user
         when(userRepository.existsByUsername(any())).thenReturn(true);
 
-        // Act
-        ApiResponse<String> response = userService.registerUser(registrationRequest);
-
-        // Assert
-        assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
-        assertEquals("Username is already taken", response.getMessage());
+        // Act and Assert
+        assertThrows(UsernameTakenException.class, () -> userService.registerUser(registrationRequest));
 
         // Verify that the repository's save method was not called
         verify(userRepository, never()).save(any());
@@ -102,18 +96,13 @@ class UserServiceTests {
         RegistrationRequest registrationRequest = new RegistrationRequest();
         registrationRequest.setUsername("newUser");
         registrationRequest.setEmail("existing@example.com");
-        registrationRequest.setPassword("newPassword");
+        registrationRequest.setPassword("testPassword");
 
         // Mock the repository behavior to simulate an existing email
-        when(userRepository.existsByUsername(any())).thenReturn(false);
         when(userRepository.existsByEmail(any())).thenReturn(true);
 
-        // Act
-        ApiResponse<String> response = userService.registerUser(registrationRequest);
-
-        // Assert
-        assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
-        assertEquals("Email is already taken", response.getMessage());
+        // Act and Assert
+        assertThrows(EmailTakenException.class, () -> userService.registerUser(registrationRequest));
 
         // Verify that the repository's save method was not called
         verify(userRepository, never()).save(any());
@@ -125,64 +114,42 @@ class UserServiceTests {
         RegistrationRequest registrationRequest = new RegistrationRequest();
         registrationRequest.setUsername("existingUser");
         registrationRequest.setEmail("existing@example.com");
-        registrationRequest.setPassword("newPassword");
+        registrationRequest.setPassword("testPassword");
 
         // Mock the repository behavior to simulate both existing username and email
         when(userRepository.existsByUsername(any())).thenReturn(true);
         when(userRepository.existsByEmail(any())).thenReturn(true);
 
-        // Act
-        ApiResponse<String> response = userService.registerUser(registrationRequest);
-
-        // Assert
-        assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
-        assertEquals("Username is already taken", response.getMessage());
+        // Act and Assert
+        assertThrows(UsernameTakenException.class, () -> userService.registerUser(registrationRequest));
 
         // Verify that the repository's save method was not called
         verify(userRepository, never()).save(any());
     }
 
     @Test
-    void testValidateUserRegistration() {
-        // Mocking a user with an existing username
-        User existingUser = new User();
-        existingUser.setUsername("existingUser");
-        existingUser.setEmail("existing@email.com");
-        existingUser.setPassword("newPassword");
-        when(userRepository.existsByUsername(existingUser.getUsername())).thenReturn(true);
+    void testValidateUserRegistration_UsernameTooShort() {
+        // Arrange user with a username that is too short
+        User user = new User();
+        user.setUsername("abc");  // Less than the required minimum of 4 characters
+        user.setEmail("test@email.com");
+        user.setPassword("testPassword");
 
-        // Mocking a user with an existing email
-        User newUser = new User();
-        newUser.setUsername("existingUser2");
-        newUser.setEmail("existing@email.com");
-        newUser.setPassword("newPassword");
-        when(userRepository.existsByEmail(newUser.getEmail())).thenReturn(true);
-
-        // Mocking a user with invalid data
-        User invalidUser = new User();
-        invalidUser.setUsername("newUser");
-        invalidUser.setEmail("existing@email.com");
-        invalidUser.setPassword("newPassword");
-
-        // Mocking a validation error
+        // Mock the validation result
         ConstraintViolation<User> violation = mock(ConstraintViolation.class);
         Set<ConstraintViolation<User>> violationsSet = Collections.singleton(violation);
-        when(violation.getMessage()).thenReturn("Validation error");
-        when(validator.validate(invalidUser)).thenReturn(violationsSet);
+        when(violation.getMessage()).thenReturn("Username must be at least 4 characters");
+        when(validator.validate(user)).thenReturn(violationsSet);
 
-        // Test the case when the username is already taken
-        assertThrows(UsernameTakenException.class, () -> userService.validateUserRegistration(existingUser));
-
-        // Test the case when the email is already taken
-        assertThrows(EmailTakenException.class, () -> userService.validateUserRegistration(newUser));
-
-        // Test the case when there is a validation error
-        assertThrows(ConstraintViolationException.class, () -> userService.validateUserRegistration(invalidUser));
+        // Test the case when there is a validation error due to username being too short
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> userService.validateUserRegistration(user));
 
         // Verify that the userRepository methods are called as expected
-        verify(userRepository, times(1)).existsByUsername(existingUser.getUsername());
-        verify(userRepository, times(1)).existsByEmail(newUser.getEmail());
-        verify(validator, times(1)).validate(invalidUser);
+        verify(validator, times(1)).validate(user);
+
+        // Verify that the exception contains the expected error message
+        assertThat(exception.getConstraintViolations()).hasSize(1);
+        assertThat(exception.getMessage()).contains("Username must be at least 4 characters");
     }
 
     /*
