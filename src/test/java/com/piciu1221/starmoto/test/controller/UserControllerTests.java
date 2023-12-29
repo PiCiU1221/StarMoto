@@ -2,8 +2,11 @@ package com.piciu1221.starmoto.test.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.piciu1221.starmoto.controller.UserController;
-import com.piciu1221.starmoto.dto.ApiResponse;
+import com.piciu1221.starmoto.dto.ApiSuccessfulResponse;
 import com.piciu1221.starmoto.dto.RegistrationRequest;
+import com.piciu1221.starmoto.exception.ApiErrorResponse;
+import com.piciu1221.starmoto.exception.EmailTakenException;
+import com.piciu1221.starmoto.exception.UsernameTakenException;
 import com.piciu1221.starmoto.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,17 +14,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,100 +45,100 @@ public class UserControllerTests {
 
     @Test
     public void UserController_RegisterUser_ReturnsSuccessResponse() throws Exception {
-        // Create a sample registration request for testing
         RegistrationRequest registrationRequest = new RegistrationRequest();
         registrationRequest.setUsername("testUser");
         registrationRequest.setEmail("test@example.com");
         registrationRequest.setPassword("testPassword");
 
-        // Mock the behavior of userService.existsByUsername() and userService.existsByEmail()
-        when(userService.existsByUsername(registrationRequest.getUsername())).thenReturn(false);
-        when(userService.existsByEmail(registrationRequest.getEmail())).thenReturn(false);
+        // When everything goes right the userService method returns void
+        doNothing().when(userService).registerUser(registrationRequest);
 
-        // Mock the response from userService.registerUser()
-        ApiResponse<String> successResponse = ApiResponse.customSuccess(HttpStatus.CREATED, "User registered successfully");
-        when(userService.registerUser(registrationRequest)).thenReturn(successResponse);
+        // Expected response
+        ApiSuccessfulResponse successResponse = new ApiSuccessfulResponse("User registered successfully");
 
         // Perform the registration request
         mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationRequest)))
-                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(successResponse)));
+    }
 
-        // Verify that the registration method is called with the correct arguments
-        verify(userService).registerUser(registrationRequest);
+    @Test
+    public void UserController_RegisterUser_InvalidRequest_ReturnsBadRequestResponse() throws Exception {
+        RegistrationRequest registrationRequest = new RegistrationRequest();
+        // Invalid data
+        registrationRequest.setUsername("abc");
+        registrationRequest.setEmail("abc");
+        registrationRequest.setPassword("abc");
+
+        // Perform the registration request
+        mockMvc.perform(post("/api/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registrationRequest)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     public void UserController_RegisterUser_UsernameTaken_ReturnsConflictResponse() throws Exception {
-        // Create a sample registration request for testing
         RegistrationRequest registrationRequest = new RegistrationRequest();
-        registrationRequest.setUsername("existingUser"); // Assuming "existingUser" already exists
+        registrationRequest.setUsername("existingUser");
         registrationRequest.setEmail("test@example.com");
         registrationRequest.setPassword("testPassword");
 
-        // Mock the behavior of userService.existsByUsername() to return true, indicating the username is taken
-        when(userService.existsByUsername(registrationRequest.getUsername())).thenReturn(true);
+        // Mock the userService to throw a RegistrationException
+        doThrow(new UsernameTakenException("Username is already taken")).when(userService).registerUser(registrationRequest);
 
-        // Mock the response from userService.registerUser()
-        ApiResponse<String> errorResponse = ApiResponse.error(HttpStatus.CONFLICT, "Username is already taken");
-        when(userService.registerUser(registrationRequest)).thenReturn(errorResponse);
+        // Expected response
+        ApiErrorResponse errorResponse = new ApiErrorResponse("RegistrationException", "Username is already taken");
 
         // Perform the registration request
         mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationRequest)))
-                .andExpect(status().isConflict())
+                .andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(errorResponse)));
-
-        // Verify that the registration method is called with the correct arguments
-        verify(userService).registerUser(registrationRequest);
     }
 
     @Test
     public void UserController_RegisterUser_EmailTaken_ReturnsConflictResponse() throws Exception {
-        // Create a sample registration request for testing
         RegistrationRequest registrationRequest = new RegistrationRequest();
         registrationRequest.setUsername("testUser");
-        registrationRequest.setEmail("existing@example.com"); // Assuming "existing@example.com" already exists
+        registrationRequest.setEmail("existing@example.com");
         registrationRequest.setPassword("testPassword");
 
-        // Mock the behavior of userService.existsByEmail() to return true, indicating the email is taken
-        when(userService.existsByEmail(registrationRequest.getEmail())).thenReturn(true);
+        // Mock the userService to throw a RegistrationException
+        doThrow(new EmailTakenException("Email is already taken")).when(userService).registerUser(registrationRequest);
 
-        // Mock the response from userService.registerUser()
-        ApiResponse<String> errorResponse = ApiResponse.error(HttpStatus.CONFLICT, "Email is already taken");
-        when(userService.registerUser(registrationRequest)).thenReturn(errorResponse);
+        // Expected response
+        ApiErrorResponse errorResponse = new ApiErrorResponse("RegistrationException", "Email is already taken");
 
         // Perform the registration request
         mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationRequest)))
-                .andExpect(status().isConflict())
+                .andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(errorResponse)));
-
-        // Verify that the registration method is called with the correct arguments
-        verify(userService).registerUser(registrationRequest);
     }
 
     @Test
-    public void UserController_RegisterUser_InvalidEmailFormat_ReturnsBadRequest() throws Exception {
-        // Create a sample registration request with an invalid email format
+    public void UserController_RegisterUser_InternalServerError_ReturnsInternalServerErrorResponse() throws Exception {
         RegistrationRequest registrationRequest = new RegistrationRequest();
         registrationRequest.setUsername("testUser");
-        registrationRequest.setEmail("invalid-email");
+        registrationRequest.setEmail("test@example.com");
         registrationRequest.setPassword("testPassword");
 
-        // Convert the object to JSON
-        String jsonRequest = objectMapper.writeValueAsString(registrationRequest);
+        // Mock the userService to throw an unexpected exception
+        doThrow(new RuntimeException("Unexpected error")).when(userService).registerUser(registrationRequest);
 
-        // Perform the POST request
-        ResultActions resultActions = mockMvc.perform(post("/api/user/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest));
+        // Expected response
+        ApiErrorResponse errorResponse = new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred.");
 
-        // Verify that the response status is BAD_REQUEST
-        resultActions.andExpect(status().isBadRequest());
+        // Perform the registration request
+        mockMvc.perform(post("/api/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registrationRequest)))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(errorResponse)));
     }
 }
