@@ -7,8 +7,9 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "car_features_junction")
-public class CarFeatureJunction {
+@Table(name = "car_image_urls_junction")
+public class CarImageUrlJunction {
+
     @EmbeddedId
-    private CarFeatureJunctionId id;
+    private CarImageUrlJunctionId id;
 }

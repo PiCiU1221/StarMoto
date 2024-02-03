@@ -1,6 +1,6 @@
 package com.piciu1221.starmoto.service;
 
-import com.piciu1221.starmoto.dto.LoginRequest;
+import com.piciu1221.starmoto.dto.LoginRequestDTO;
 import com.piciu1221.starmoto.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,10 +21,10 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public Authentication authenticateUser(LoginRequest loginRequest) throws AuthenticationException {
+    public Authentication authenticateUser(LoginRequestDTO loginRequestDTO) throws AuthenticationException {
         try {
             return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
             );
         } catch (BadCredentialsException e) {
             throw new IllegalArgumentException("Invalid username or password");

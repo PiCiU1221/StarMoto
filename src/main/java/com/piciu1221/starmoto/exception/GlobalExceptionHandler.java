@@ -31,6 +31,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ApiErrorResponse handleInternalServerErrors(Exception e) {
         return new ApiErrorResponse("InternalServerError",
-                "Internal server error occurred.");
+                "Unexpected internal server error occurred: " + e.getMessage());
     }
 }

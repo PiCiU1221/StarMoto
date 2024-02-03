@@ -1,8 +1,7 @@
 package com.piciu1221.starmoto.service;
 
-import com.piciu1221.starmoto.dto.RegistrationRequest;
-import com.piciu1221.starmoto.exception.EmailTakenException;
-import com.piciu1221.starmoto.exception.UsernameTakenException;
+import com.piciu1221.starmoto.dto.RegistrationRequestDTO;
+import com.piciu1221.starmoto.exception.RegistrationException;
 import com.piciu1221.starmoto.model.User;
 import com.piciu1221.starmoto.repository.UserRepository;
 import jakarta.validation.ConstraintViolation;
@@ -33,15 +32,16 @@ public class UserService implements UserDetailsService {
         this.validator = validator;
     }
 
-    public void registerUser(RegistrationRequest registrationRequest) throws UsernameTakenException, EmailTakenException, ConstraintViolationException {
+    public User registerUser(RegistrationRequestDTO registrationRequestDTO) throws RegistrationException, ConstraintViolationException {
         User user = new User();
-        user.setUsername(registrationRequest.getUsername());
-        user.setEmail(registrationRequest.getEmail());
-        user.setPassword(registrationRequest.getPassword());
+        user.setEmail(registrationRequestDTO.getEmail());
+        user.setUsername(registrationRequestDTO.getUsername());
+        user.setPassword(registrationRequestDTO.getPassword());
 
         validateUserRegistration(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+
+        return userRepository.save(user);
     }
 
     public void validateUserRegistration(User user) {
@@ -55,11 +55,11 @@ public class UserService implements UserDetailsService {
         }
 
         if (existsByUsername) {
-            throw new UsernameTakenException("Username is already taken");
+            throw new RegistrationException("Username is already taken");
         }
 
         if (existsByEmail) {
-            throw new EmailTakenException("Email is already taken");
+            throw new RegistrationException("Email is already taken");
         }
     }
 

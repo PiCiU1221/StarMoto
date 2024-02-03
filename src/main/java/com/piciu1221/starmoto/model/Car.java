@@ -1,5 +1,6 @@
 package com.piciu1221.starmoto.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.piciu1221.starmoto.model.reference.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -22,10 +23,18 @@ public class Car {
     @Column(name = "car_id")
     private Integer carId;
 
+    @Column(name = "vin", unique = true, nullable = false, length = 17)
+    private String vin;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "make_id", nullable = false)
+    private CarMake make;
 
     @NotNull
     @ManyToOne
@@ -34,13 +43,8 @@ public class Car {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false)
-    private CarType type;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "condition_id", nullable = false)
-    private CarCondition condition;
+    @JoinColumn(name = "body_type_id", nullable = false)
+    private CarBodyType bodyType;
 
     @NotNull
     @ManyToOne
@@ -54,8 +58,13 @@ public class Car {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "transmission_id", nullable = false)
+    @JoinColumn(name = "transmission_type_id", nullable = false)
     private CarTransmissionType transmissionType;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "drivetrain_id", nullable = false)
+    private CarDrivetrainType drivetrainType;
 
     @NotNull
     @ManyToOne
@@ -66,11 +75,6 @@ public class Car {
     @ManyToOne
     @JoinColumn(name = "seats_id", nullable = false)
     private CarSeatCount seats;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "drivetrain_id", nullable = false)
-    private CarDrivetrainType drivetrainType;
 
     @Min(value = 1900, message = "Production year should be at least 1900")
     @Column(name = "production_year")
@@ -85,17 +89,24 @@ public class Car {
     @Column(name = "mileage")
     private Integer mileage;
 
-    @Min(value = 1, message = "Horsepower should be at least 1")
-    @Column(name = "horsepower")
-    private Integer horsepower;
+    @Min(value = 1, message = "Engine power should be at least 1")
+    @Column(name = "engine_power")
+    private Integer enginePower;
 
     @Min(value = 1, message = "Engine capacity should be at least 1")
     @Column(name = "engine_capacity")
     private Integer engineCapacity;
 
-    @Size(max = 1000, message = "Description cannot exceed 1000 characters")
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "is_damaged")
+    private Boolean isDamaged;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedAt = null;
 
     @Size(max = 7, message = "Up to 7 features are allowed")
     @ManyToMany(cascade = CascadeType.ALL)
@@ -108,18 +119,9 @@ public class Car {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "car_images_junction",
+            name = "car_image_urls_junction",
             joinColumns = @JoinColumn(name = "car_id"),
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    private List<CarImage> images;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "active")
-    private Boolean active = true;
+    private List<CarImageUrl> imageUrls;
 }

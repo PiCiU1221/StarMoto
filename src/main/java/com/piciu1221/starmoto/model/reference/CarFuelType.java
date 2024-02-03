@@ -5,13 +5,13 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "car_fuel_type")
+@Table(name = "car_fuel_types")
 public class CarFuelType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fuel_type_id")
     private Integer fuelTypeId;
 
-    @Column(name = "fuel_type_name", nullable = false, unique = true)
+    @Column(name = "fuel_type_name", nullable = false, unique = true, length = 255)
     private String fuelTypeName;
 }

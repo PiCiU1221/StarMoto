@@ -2,9 +2,15 @@ package com.piciu1221.starmoto.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.*;
-import org.springframework.beans.factory.annotation.Value;
+import com.piciu1221.starmoto.exception.CarAddException;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.IIOImage;
@@ -20,35 +26,45 @@ import java.util.Iterator;
 
 @Service
 public class CarImageService {
-    @Value("${imgur.clientId}")
-    private String clientId;
 
     public String uploadImage(MultipartFile imageFile) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
         // Compress the image
         byte[] compressedImageBytes = compressImage(imageFile.getBytes());
 
-        RequestBody body = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("image", imageFile.getOriginalFilename(), RequestBody.create(MediaType.parse("image/*"), compressedImageBytes))
-                .build();
+        // Encode the compressed image bytes to base64
+        String base64Image = Base64.encodeBase64String(compressedImageBytes);
 
-        Request request = new Request.Builder()
-                .url("https://api.imgur.com/3/image")
-                .header("Authorization", "Client-ID " + clientId)
-                .post(body)
-                .build();
+        // Prepare the request body
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                return extractImageUrlFromResponse(responseBody);
-            } else {
-                System.err.println("Error uploading image: " + response.code() + " - " + response.message());
-                // Handle error or log it
-                return null;
-            }
+        // key is public, no need to hide it
+        String apiKey = "6d207e02198a847aa98d0a2a901485a5";
+
+        body.add("key", apiKey);
+        body.add("action", "upload");
+        body.add("source", base64Image);
+        body.add("format", "json");
+
+        // Create the RestTemplate instance
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Define the endpoint URL
+        String apiUrl = "https://freeimage.host/api/1/upload";
+
+        // Make the HTTP POST request
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                apiUrl,
+                HttpMethod.POST,
+                new HttpEntity<>(body),
+                String.class
+        );
+
+        // Check if the request was successful
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            String responseBody = responseEntity.getBody();
+            return extractImageUrlFromResponse(responseBody);
+        } else {
+            throw new CarAddException("Error uploading image: " + responseEntity.getStatusCodeValue() + " - " + responseEntity.getBody());
         }
     }
 
@@ -56,7 +72,8 @@ public class CarImageService {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
 
-        return jsonNode.path("data").path("link").asText();
+        // Extract the image URL from Freeimage.host API response
+        return jsonNode.path("image").path("url").asText();
     }
 
     private byte[] compressImage(byte[] originalImageBytes) throws IOException {

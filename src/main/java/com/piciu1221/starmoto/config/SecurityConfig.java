@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                                 // Allow access to authentication endpoint for all
-                                .requestMatchers("/api/user/register", "/api/auth/login").permitAll()
+                                .requestMatchers("/api/user/register", "/api/auth/login", "/api/cars/add").permitAll()
 
                                 // Require authentication for any other requests
                                 .anyRequest().authenticated()

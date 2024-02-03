@@ -5,13 +5,13 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "car_condition")
+@Table(name = "car_conditions")
 public class CarCondition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "condition_id")
     private Integer conditionId;
 
-    @Column(name = "condition_name", nullable = false, unique = true, length = 50)
+    @Column(name = "condition_name", nullable = false, unique = true, length = 255)
     private String conditionName;
 }

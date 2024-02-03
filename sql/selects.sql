@@ -1,100 +1,43 @@
--- Select cars without features
-SELECT c.car_id,
-       u.username                AS seller_username,
-       m.make_name               AS make,
-       mdl.model_name            AS model,
-       t.type_name               AS type,
-       cc.condition_name         AS condition,
-       cr.color_name             AS color,
-       ft.fuel_type_name         AS fuel_type,
-       tt.transmission_type_name AS transmission_type,
-       c.production_year,
-       c.price,
-       c.mileage,
-       dc.door_count             AS doors,
-       sc.seat_count             AS seats,
-       c.horsepower,
-       c.engine_capacity,
-       c.description,
-       c.created_at,
-       c.updated_at,
-       c.active,
-       dt.drivetrain_type_name   AS drivetrain_type
-FROM cars c
-         JOIN
-     users u ON c.seller_id = u.id
-         JOIN
-     car_model mdl ON c.model_id = mdl.model_id
-         JOIN
-     car_make m ON mdl.make_id = m.make_id
-         JOIN
-     car_type t ON c.type_id = t.type_id
-         JOIN
-     car_condition cc ON c.condition_id = cc.condition_id
-         JOIN
-     car_color cr ON c.color_id = cr.color_id
-         JOIN
-     car_fuel_type ft ON c.fuel_type_id = ft.fuel_type_id
-         JOIN
-     car_transmission_type tt ON c.transmission_id = tt.transmission_type_id
-         JOIN
-     car_door_count dc ON c.doors_id = dc.door_count_id
-         JOIN
-     car_seat_count sc ON c.seats_id = sc.seat_count_id
-         JOIN
-     car_drivetrain_type dt ON c.drivetrain_id = dt.drivetrain_type_id;
+-- Select every car with names not ids with features and image urls
 
--- Select cars with features
 SELECT c.car_id,
-       u.username                 AS seller_username,
-       m.make_name                AS make,
-       mdl.model_name             AS model,
-       t.type_name                AS type,
-       cc.condition_name          AS condition,
-       cr.color_name              AS color,
-       ft.fuel_type_name          AS fuel_type,
-       tt.transmission_type_name  AS transmission_type,
+       c.vin,
+       c.seller_id,
+       make.make_name                      AS make,
+       model.model_name                    AS model,
+       body_type.body_type_name            AS body_type,
+       color.color_name                    AS color,
+       fuel_type.fuel_type_name            AS fuel_type,
+       transmission.transmission_type_name AS transmission_type,
+       drivetrain.drivetrain_type_name     AS drivetrain_type,
+       doors.door_count                    AS doors,
+       seats.seat_count                    AS seats,
        c.production_year,
        c.price,
        c.mileage,
-       dc.door_count              AS doors,
-       sc.seat_count              AS seats,
-       c.horsepower,
+       c.engine_power,
        c.engine_capacity,
-       c.description,
+       c.is_damaged,
        c.created_at,
        c.updated_at,
-       c.active,
-       dt.drivetrain_type_name    AS drivetrain_type,
-       array_agg(cf.feature_name) AS features
+       -- Get features
+       array_agg(f.feature_name)           AS features,
+       -- Get image URLs
+       array_agg(i.image_url)              AS image_urls
 FROM cars c
-         JOIN
-     users u ON c.seller_id = u.id
-         JOIN
-     car_model mdl ON c.model_id = mdl.model_id
-         JOIN
-     car_make m ON mdl.make_id = m.make_id
-         JOIN
-     car_type t ON c.type_id = t.type_id
-         JOIN
-     car_condition cc ON c.condition_id = cc.condition_id
-         JOIN
-     car_color cr ON c.color_id = cr.color_id
-         JOIN
-     car_fuel_type ft ON c.fuel_type_id = ft.fuel_type_id
-         JOIN
-     car_transmission_type tt ON c.transmission_id = tt.transmission_type_id
-         JOIN
-     car_door_count dc ON c.doors_id = dc.door_count_id
-         JOIN
-     car_seat_count sc ON c.seats_id = sc.seat_count_id
-         JOIN
-     car_drivetrain_type dt ON c.drivetrain_id = dt.drivetrain_type_id
-         LEFT JOIN
-     car_features_junction cfj ON c.car_id = cfj.car_id
-         LEFT JOIN
-     car_features cf ON cfj.feature_id = cf.feature_id
-GROUP BY c.car_id, u.username, m.make_name, mdl.model_name, t.type_name, cc.condition_name, cr.color_name,
-         ft.fuel_type_name, tt.transmission_type_name, c.production_year, c.price, c.mileage, dc.door_count,
-         sc.seat_count, c.horsepower, c.engine_capacity, c.description, c.created_at, c.updated_at, c.active,
-         dt.drivetrain_type_name;
+         LEFT JOIN car_makes make ON c.make_id = make.make_id
+         LEFT JOIN car_models model ON c.model_id = model.model_id
+         LEFT JOIN car_body_types body_type ON c.body_type_id = body_type.body_type_id
+         LEFT JOIN car_colors color ON c.color_id = color.color_id
+         LEFT JOIN car_fuel_types fuel_type ON c.fuel_type_id = fuel_type.fuel_type_id
+         LEFT JOIN car_transmission_types transmission ON c.transmission_type_id = transmission.transmission_type_id
+         LEFT JOIN car_drivetrain_types drivetrain ON c.drivetrain_id = drivetrain.drivetrain_type_id
+         LEFT JOIN car_door_counts doors ON c.doors_id = doors.door_count_id
+         LEFT JOIN car_seat_counts seats ON c.seats_id = seats.seat_count_id
+         LEFT JOIN car_features_junction cf ON c.car_id = cf.car_id
+         LEFT JOIN car_features f ON cf.feature_id = f.feature_id
+         LEFT JOIN car_image_urls_junction ci ON c.car_id = ci.car_id
+         LEFT JOIN car_image_urls i ON ci.image_id = i.image_id
+GROUP BY c.car_id, make.make_name, model.model_name, body_type.body_type_name,
+         color.color_name, fuel_type.fuel_type_name, transmission.transmission_type_name,
+         drivetrain.drivetrain_type_name, doors.door_count, seats.seat_count;

@@ -1,8 +1,9 @@
 package com.piciu1221.starmoto.controller;
 
-import com.piciu1221.starmoto.dto.LoginRequest;
+import com.piciu1221.starmoto.dto.LoginRequestDTO;
+import com.piciu1221.starmoto.exception.ApiErrorResponse;
 import com.piciu1221.starmoto.service.AuthService;
-import com.piciu1221.starmoto.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,19 +16,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UserService userService;
     private final AuthService authService;
 
     @Autowired
-    public AuthController(UserService userService, AuthService authService) {
-        this.userService = userService;
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         try {
-            Authentication authentication = authService.authenticateUser(loginRequest);
+            Authentication authentication = authService.authenticateUser(loginRequestDTO);
             String token = authService.generateToken(authentication);
 
             HttpHeaders headers = new HttpHeaders();
@@ -35,7 +34,11 @@ public class AuthController {
 
             return ResponseEntity.ok().headers(headers).build();
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiErrorResponse("AuthenticationException", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred."));
         }
     }
 

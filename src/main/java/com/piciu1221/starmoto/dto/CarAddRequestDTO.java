@@ -1,8 +1,5 @@
 package com.piciu1221.starmoto.dto;
 
-import com.piciu1221.starmoto.model.Car;
-import com.piciu1221.starmoto.model.User;
-import com.piciu1221.starmoto.model.reference.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,48 +9,46 @@ import java.util.List;
 
 @Data
 public class CarAddRequestDTO {
+    @NotNull(message = "VIN is required")
+    @Size(min = 17, max = 17, message = "VIN must be 17 characters long")
+    private String vin;
+
     @NotNull(message = "Seller ID is required")
     @Positive(message = "Seller ID must be a positive integer")
     private Long sellerId;
 
-    @NotNull(message = "Model ID is required")
-    @Positive(message = "Model ID must be a positive integer")
-    private Integer modelId;
+    @NotNull(message = "Make name is required")
+    private String makeName;
 
-    @NotNull(message = "Type ID is required")
-    @Positive(message = "Type ID must be a positive integer")
-    private Integer typeId;
+    @NotNull(message = "Model name is required")
+    private String modelName;
 
-    @NotNull(message = "Condition ID is required")
-    @Positive(message = "Condition ID must be a positive integer")
-    private Integer conditionId;
+    @NotNull(message = "Body Type name is required")
+    private String bodyTypeName;
 
-    @NotNull(message = "Color ID is required")
-    @Positive(message = "Color ID must be a positive integer")
-    private Integer colorId;
+    @NotNull(message = "Condition name is required")
+    private String conditionName;
 
-    @NotNull(message = "Fuel Type ID is required")
-    @Positive(message = "Fuel Type ID must be a positive integer")
-    private Integer fuelTypeId;
+    @NotNull(message = "Color name is required")
+    private String colorName;
 
-    @NotNull(message = "Transmission ID is required")
-    @Positive(message = "Transmission ID must be a positive integer")
-    private Integer transmissionId;
+    @NotNull(message = "Fuel Type name is required")
+    private String fuelTypeName;
 
-    @NotNull(message = "Doors ID is required")
-    @Positive(message = "Doors ID must be a positive integer")
-    private Integer doorsId;
+    @NotNull(message = "Transmission name is required")
+    private String transmissionTypeName;
 
-    @NotNull(message = "Seats ID is required")
-    @Positive(message = "Seats ID must be a positive integer")
-    private Integer seatsId;
+    @NotNull(message = "Drivetrain name is required")
+    private String drivetrainTypeName;
 
-    @NotNull(message = "Drivetrain ID is required")
-    @Positive(message = "Drivetrain ID must be a positive integer")
-    private Integer drivetrainId;
+    @NotNull(message = "Doors count is required")
+    private Integer doorsCount;
+
+    @NotNull(message = "Seats count is required")
+    private Integer seatsCount;
 
     @NotNull(message = "Production Year is required")
-    @Min(value = 1886, message = "Production year should be at least 1886")
+    @Min(value = 1900, message = "Production year should be at least 1900")
     private Integer productionYear;
 
     @NotNull(message = "Price is required")
@@ -65,46 +60,21 @@ public class CarAddRequestDTO {
     @Min(value = 0, message = "Mileage cannot be negative")
     private Integer mileage;
 
-    @NotNull(message = "Horsepower is required")
-    @Min(value = 1, message = "Horsepower should be at least 1")
-    private Integer horsepower;
+    @NotNull(message = "Engine power is required")
+    @Min(value = 1, message = "Engine power should be at least 1")
+    private Integer enginePower;
 
     @NotNull(message = "Engine Capacity is required")
     @Min(value = 1, message = "Engine capacity should be at least 1")
     private Integer engineCapacity;
 
-    @Size(max = 1000, message = "Description cannot exceed 1000 characters")
-    private String description;
+    @NotNull(message = "Damage status is required")
+    private Boolean isDamaged;
 
     @Size(max = 7, message = "Up to 7 features are allowed")
-    private List<@Positive(message = "Feature ID must be a positive integer") Integer> featureIds;
+    private List<String> features;
 
+    @NotNull(message = "Images are required")
+    @NotEmpty(message = "Images list cannot be empty")
     private List<MultipartFile> images;
-
-    public Car toEntity(User seller, CarModel model, CarType type, CarCondition condition,
-                        CarColor color, CarFuelType fuelType, CarTransmissionType transmissionType,
-                        CarDoorCount doors, CarSeatCount seats, CarDrivetrainType drivetrainType,
-                        List<CarFeature> features) {
-        Car car = new Car();
-        car.setSeller(seller);
-        car.setModel(model);
-        car.setType(type);
-        car.setCondition(condition);
-        car.setColor(color);
-        car.setFuelType(fuelType);
-        car.setTransmissionType(transmissionType);
-        car.setDoors(doors);
-        car.setSeats(seats);
-        car.setDrivetrainType(drivetrainType);
-        car.setProductionYear(this.getProductionYear());
-        car.setPrice(this.getPrice());
-        car.setMileage(this.getMileage());
-        car.setHorsepower(this.getHorsepower());
-        car.setEngineCapacity(this.getEngineCapacity());
-        car.setDescription(this.getDescription());
-
-        car.setFeatures(features);
-
-        return car;
-    }
 }

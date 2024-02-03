@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "car_door_count")
+@Table(name = "car_door_counts")
 public class CarDoorCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,5 +13,5 @@ public class CarDoorCount {
     private Integer doorId;
 
     @Column(name = "door_count", nullable = false, unique = true)
-    private Integer count;
+    private Integer doorCount;
 }

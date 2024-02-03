@@ -1,6 +1,6 @@
 package com.piciu1221.starmoto.test.service;
 
-import com.piciu1221.starmoto.dto.LoginRequest;
+import com.piciu1221.starmoto.dto.LoginRequestDTO;
 import com.piciu1221.starmoto.security.JwtUtil;
 import com.piciu1221.starmoto.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,16 +42,18 @@ public class AuthServiceTest {
     @Test
     void authenticateUser_ValidCredentials_ReturnsAuthentication() {
         // Arrange
-        LoginRequest loginRequest = new LoginRequest("testUser", "testPassword");
-        Authentication mockAuthentication = mock(Authentication.class);
+        LoginRequestDTO loginRequestDTO = new LoginRequestDTO();
+        loginRequestDTO.setUsername("testUser");
+        loginRequestDTO.setPassword("testPassword");
 
+        // Mock the authentication manager behavior
+        Authentication mockAuthentication = mock(Authentication.class);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(mockAuthentication);
 
-        // Act
-        Authentication result = authService.authenticateUser(loginRequest);
+        Authentication result = authService.authenticateUser(loginRequestDTO);
 
-        // Assert
+        // Act and Assert
         assertNotNull(result);
         assertEquals(mockAuthentication, result);
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
@@ -60,26 +62,30 @@ public class AuthServiceTest {
     @Test
     void authenticateUser_InvalidCredentials_ThrowsIllegalArgumentException() {
         // Arrange
-        LoginRequest loginRequest = new LoginRequest("invalidUser", "invalidPassword");
+        LoginRequestDTO loginRequestDTO = new LoginRequestDTO();
+        loginRequestDTO.setUsername("invalidUser");
+        loginRequestDTO.setPassword("invalidPassword");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new BadCredentialsException("Invalid credentials"));
 
         // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> authService.authenticateUser(loginRequest));
+        assertThrows(IllegalArgumentException.class, () -> authService.authenticateUser(loginRequestDTO));
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
     }
 
     @Test
     void authenticateUser_LockedAccount_ThrowsIllegalArgumentException() {
         // Arrange
-        LoginRequest loginRequest = new LoginRequest("lockedUser", "lockedPassword");
+        LoginRequestDTO loginRequestDTO = new LoginRequestDTO();
+        loginRequestDTO.setUsername("lockedUser");
+        loginRequestDTO.setPassword("lockedPassword");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new LockedException("Account locked"));
 
         // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> authService.authenticateUser(loginRequest));
+        assertThrows(IllegalArgumentException.class, () -> authService.authenticateUser(loginRequestDTO));
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
     }
 

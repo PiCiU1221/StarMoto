@@ -1,20 +1,22 @@
 package com.piciu1221.starmoto.model.reference;
 
 import com.piciu1221.starmoto.model.Car;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
-@Entity
+import java.io.Serializable;
+
+@Embeddable
 @Data
-@Table(name = "car_images_junction")
-public class CarImageJunction {
-    @Id
+public class CarImageUrlJunctionId implements Serializable {
+
     @ManyToOne
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "image_id", nullable = false)
-    private CarImage image;
+    private CarImageUrl image;
 }

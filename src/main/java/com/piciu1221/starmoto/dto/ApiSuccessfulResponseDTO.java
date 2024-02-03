@@ -3,10 +3,10 @@ package com.piciu1221.starmoto.dto;
 import lombok.Data;
 
 @Data
-public class ApiSuccessfulResponse {
+public class ApiSuccessfulResponseDTO {
     private String message;
 
-    public ApiSuccessfulResponse(String message) {
+    public ApiSuccessfulResponseDTO(String message) {
         this.message = message;
     }
 }

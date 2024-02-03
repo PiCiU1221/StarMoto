@@ -3,123 +3,125 @@
 CREATE TABLE users
 (
     id         SERIAL PRIMARY KEY,
-    username   VARCHAR(20)  NOT NULL,
-    email      VARCHAR(100) NOT NULL,
-    password   VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    enabled    BOOLEAN                  DEFAULT TRUE
+    username   VARCHAR(20)                            NOT NULL,
+    email      VARCHAR(100)                           NOT NULL,
+    password   VARCHAR(255)                           NOT NULL,
+    created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP(0) DEFAULT NULL,
+    is_enabled BOOLEAN      DEFAULT TRUE              NOT NULL
 );
 
-CREATE TABLE car_color
-(
-    color_id SERIAL PRIMARY KEY,
-    name     VARCHAR(50) NOT NULL
-);
+-- Reference tables for the cars table
 
-CREATE TABLE car_condition
-(
-    condition_id   SERIAL PRIMARY KEY,
-    condition_name VARCHAR(255) NOT NULL UNIQUE
-);
-
-CREATE TABLE car_door_count
-(
-    door_count_id SERIAL PRIMARY KEY,
-    door_count    INTEGER UNIQUE
-);
-
-CREATE TABLE car_drivetrain_type
-(
-    drivetrain_type_id   SERIAL PRIMARY KEY,
-    drivetrain_type_name VARCHAR(255) NOT NULL UNIQUE
-);
-
-CREATE TABLE car_feature
-(
-    feature_id   SERIAL PRIMARY KEY,
-    feature_name VARCHAR(50) NOT NULL UNIQUE
-);
-
-CREATE TABLE car_fuel_type
-(
-    fuel_type_id   SERIAL PRIMARY KEY,
-    fuel_type_name VARCHAR(255) NOT NULL UNIQUE
-);
-
-CREATE TABLE car_make
+CREATE TABLE car_makes
 (
     make_id   SERIAL PRIMARY KEY,
     make_name VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE car_model
+CREATE TABLE car_models
 (
     model_id   SERIAL PRIMARY KEY,
-    model_name VARCHAR(255) NOT NULL,
-    make_id    INTEGER REFERENCES car_make ON DELETE CASCADE,
+    model_name VARCHAR(255)                                   NOT NULL,
+    make_id    INTEGER REFERENCES car_makes ON DELETE CASCADE NOT NULL,
     UNIQUE (model_name, make_id)
 );
 
-CREATE TABLE car_seat_count
+CREATE TABLE car_body_types
 (
-    seat_count_id SERIAL PRIMARY KEY,
-    seat_count    INTEGER UNIQUE
+    body_type_id   SERIAL PRIMARY KEY,
+    body_type_name VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE car_transmission_type
+CREATE TABLE car_colors
+(
+    color_id   SERIAL PRIMARY KEY,
+    color_name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE car_fuel_types
+(
+    fuel_type_id   SERIAL PRIMARY KEY,
+    fuel_type_name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE car_transmission_types
 (
     transmission_type_id   SERIAL PRIMARY KEY,
     transmission_type_name VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE car_type
+CREATE TABLE car_drivetrain_types
 (
-    type_id   SERIAL PRIMARY KEY,
-    type_name VARCHAR(255) NOT NULL UNIQUE
+    drivetrain_type_id   SERIAL PRIMARY KEY,
+    drivetrain_type_name VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE car_images
+CREATE TABLE car_door_counts
 (
-    image_id   SERIAL PRIMARY KEY,
-    image_url  VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    door_count_id SERIAL PRIMARY KEY,
+    door_count    INTEGER NOT NULL UNIQUE
 );
+
+CREATE TABLE car_seat_counts
+(
+    seat_count_id SERIAL PRIMARY KEY,
+    seat_count    INTEGER NOT NULL UNIQUE
+);
+
+-- Main cars table
 
 CREATE TABLE cars
 (
-    car_id          SERIAL PRIMARY KEY,
-    seller_id       INTEGER REFERENCES users ON DELETE CASCADE,
-    model_id        INTEGER REFERENCES car_model ON DELETE CASCADE,
-    type_id         INTEGER REFERENCES car_type,
-    condition_id    INTEGER REFERENCES car_condition,
-    color_id        INTEGER REFERENCES car_color,
-    fuel_type_id    INTEGER REFERENCES car_fuel_type,
-    transmission_id INTEGER REFERENCES car_transmission_type,
-    production_year INTEGER,
-    price           INTEGER,
-    mileage         INTEGER,
-    doors_id        INTEGER REFERENCES car_door_count,
-    seats_id        INTEGER REFERENCES car_seat_count,
-    horsepower      INTEGER,
-    engine_capacity INTEGER,
-    description     TEXT,
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    active          BOOLEAN                  DEFAULT true,
-    drivetrain_id   INTEGER REFERENCES car_drivetrain_type
+    car_id               SERIAL PRIMARY KEY,
+    vin                  VARCHAR(17)                                     NOT NULL UNIQUE,
+    seller_id            INTEGER REFERENCES users ON DELETE CASCADE      NOT NULL,
+    make_id              INTEGER REFERENCES car_makes ON DELETE CASCADE  NOT NULL,
+    model_id             INTEGER REFERENCES car_models ON DELETE CASCADE NOT NULL,
+    body_type_id         INTEGER REFERENCES car_body_types               NOT NULL,
+    color_id             INTEGER REFERENCES car_colors                   NOT NULL,
+    fuel_type_id         INTEGER REFERENCES car_fuel_types               NOT NULL,
+    transmission_type_id INTEGER REFERENCES car_transmission_types       NOT NULL,
+    drivetrain_id        INTEGER REFERENCES car_drivetrain_types         NOT NULL,
+    doors_id             INTEGER REFERENCES car_door_counts              NOT NULL,
+    seats_id             INTEGER REFERENCES car_seat_counts              NOT NULL,
+    production_year      INTEGER                                         NOT NULL,
+    price                INTEGER                                         NOT NULL,
+    mileage              INTEGER                                         NOT NULL,
+    engine_power         INTEGER                                         NOT NULL,
+    engine_capacity      INTEGER                                         NOT NULL,
+    is_damaged           BOOLEAN                                         NOT NULL,
+    created_at           TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP          NOT NULL,
+    updated_at           TIMESTAMP(0) DEFAULT NULL
 );
+
+-- Tables that have their junction tables for the cars table
+
+CREATE TABLE car_features
+(
+    feature_id   SERIAL PRIMARY KEY,
+    feature_name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE car_image_urls
+(
+    image_id   SERIAL PRIMARY KEY,
+    image_url  VARCHAR(255)                           NOT NULL UNIQUE,
+    created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+-- Junction tables for the cars table
 
 CREATE TABLE car_features_junction
 (
-    car_id     INTEGER NOT NULL REFERENCES cars ON DELETE CASCADE,
-    feature_id INTEGER NOT NULL REFERENCES car_features ON DELETE CASCADE,
+    car_id     INTEGER REFERENCES cars ON DELETE CASCADE         NOT NULL,
+    feature_id INTEGER REFERENCES car_features ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (car_id, feature_id)
 );
 
-CREATE TABLE car_images_junction
+CREATE TABLE car_image_urls_junction
 (
-    car_id   INTEGER REFERENCES cars (car_id) ON DELETE CASCADE,
-    image_id INTEGER REFERENCES car_images (image_id) ON DELETE CASCADE,
+    car_id   INTEGER REFERENCES cars ON DELETE CASCADE           NOT NULL,
+    image_id INTEGER REFERENCES car_image_urls ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (car_id, image_id)
 );
