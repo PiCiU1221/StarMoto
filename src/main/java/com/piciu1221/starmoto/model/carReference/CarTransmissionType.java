@@ -1,6 +1,8 @@
-package com.piciu1221.starmoto.model.reference;
+package com.piciu1221.starmoto.model.carReference;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -10,8 +12,10 @@ public class CarTransmissionType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transmission_type_id")
+    @NotNull
     private Integer transmissionTypeId;
 
     @Column(name = "transmission_type_name", nullable = false, unique = true)
+    @NotBlank
     private String transmissionTypeName;
 }

@@ -1,4 +1,4 @@
-package com.piciu1221.starmoto.model.reference;
+package com.piciu1221.starmoto.model.carReference;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

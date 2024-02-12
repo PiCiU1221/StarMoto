@@ -1,6 +1,7 @@
-package com.piciu1221.starmoto.model.reference;
+package com.piciu1221.starmoto.model.carReference;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -9,9 +10,11 @@ import lombok.Data;
 public class CarBodyType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     @Column(name = "body_type_id")
     private Integer bodyTypeId;
 
-    @Column(name = "body_type_name", nullable = false, length = 255)
+    @Column(name = "body_type_name", nullable = false)
+    @NotNull
     private String bodyTypeName;
 }
