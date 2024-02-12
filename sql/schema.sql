@@ -2,6 +2,7 @@
 
 
 -- Users table
+
 CREATE TABLE users
 (
     user_id    BIGSERIAL PRIMARY KEY,
@@ -105,7 +106,7 @@ CREATE TABLE car_features
 CREATE TABLE car_image_urls
 (
     image_id   BIGSERIAL PRIMARY KEY,
-    image_url  VARCHAR(255)                           NOT NULL UNIQUE,
+    image_url  VARCHAR(255)                           NOT NULL,
     created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
@@ -143,7 +144,7 @@ CREATE TABLE locations
 CREATE TABLE advert_phone_numbers
 (
     phone_number_id BIGSERIAL PRIMARY KEY,
-    phone_number    CHAR(9)
+    phone_number    CHAR(9) NOT NULL
 );
 
 CREATE TABLE adverts
@@ -161,7 +162,7 @@ CREATE TABLE adverts
 
 CREATE TABLE advert_phone_numbers_junction
 (
-    advert_id            BIGINT REFERENCES adverts (advert_id) ON DELETE CASCADE  NOT NULL,
-    advert_phone_numbers BIGINT REFERENCES advert_phone_numbers (phone_number_id) NOT NULL,
-    PRIMARY KEY (advert_id, advert_phone_numbers)
+    advert_id       BIGINT REFERENCES adverts (advert_id) ON DELETE CASCADE  NOT NULL,
+    phone_number_id BIGINT REFERENCES advert_phone_numbers (phone_number_id) NOT NULL,
+    PRIMARY KEY (advert_id, phone_number_id)
 );

@@ -153,7 +153,7 @@ VALUES ('Air Conditioning'),
 -- Cars
 
 -- First car
-WITH inserted_car_id AS (
+WITH inserted_car AS (
 INSERT INTO cars (vin, make_id, model_id, body_type_id, color_id, fuel_type_id, transmission_type_id, drivetrain_id, doors_id, seats_id, production_year, mileage, engine_power, engine_capacity, is_damaged)
 VALUES
     ('ABC12345678901234', 1, 3, 8, 6, 4, 1, 2, 4, 5, 2017, 40000, 180, 2200, FALSE)
@@ -168,17 +168,18 @@ VALUES
     RETURNING image_id
     ),
 
-    image_junction AS (INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car_id.car_id, inserted_images.image_id
-FROM inserted_car_id, inserted_images)
+    image_junction AS (
+INSERT INTO car_image_urls_junction (car_id, image_id)
+SELECT inserted_car.car_id, inserted_images.image_id
+FROM inserted_car, inserted_images)
 
 INSERT INTO car_features_junction (car_id, feature_id)
-SELECT inserted_car_id.car_id, features.feature_id
-FROM inserted_car_id, (VALUES (1), (2), (3)) AS features(feature_id);
+SELECT inserted_car.car_id, features.feature_id
+FROM inserted_car, (VALUES (1), (2), (3)) AS features(feature_id);
 
 
 -- Second car
-WITH inserted_car_id AS (
+WITH inserted_car AS (
 INSERT INTO cars (vin, make_id, model_id, body_type_id, color_id, fuel_type_id, transmission_type_id, drivetrain_id, doors_id, seats_id, production_year, mileage, engine_power, engine_capacity, is_damaged)
 VALUES
     ('ABC12345678901235', 3, 7, 5, 12, 4, 2, 2, 4, 5, 2008, 105000, 105, 1896, FALSE)
@@ -193,17 +194,18 @@ VALUES
     RETURNING image_id
     ),
 
-    image_juction AS (INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car_id.car_id, inserted_images.image_id
-FROM inserted_car_id, inserted_images)
+    image_junction AS (
+INSERT INTO car_image_urls_junction (car_id, image_id)
+SELECT inserted_car.car_id, inserted_images.image_id
+FROM inserted_car, inserted_images)
 
 INSERT INTO car_features_junction (car_id, feature_id)
-SELECT inserted_car_id.car_id, features.feature_id
-FROM inserted_car_id, (VALUES (1), (2)) AS features(feature_id);
+SELECT inserted_car.car_id, features.feature_id
+FROM inserted_car, (VALUES (1), (2)) AS features(feature_id);
 
 
 -- Third car
-WITH inserted_car_id AS (
+WITH inserted_car AS (
 INSERT INTO cars (vin, make_id, model_id, body_type_id, color_id, fuel_type_id, transmission_type_id, drivetrain_id, doors_id, seats_id, production_year, mileage, engine_power, engine_capacity, is_damaged)
 VALUES
     ('ABC12345678901236', 10, 28, 8, 2, 1, 2, 1, 4, 5, 2013, 180000, 200, 1996, FALSE)
@@ -218,17 +220,18 @@ VALUES
     RETURNING image_id
     ),
 
-    image_juction AS (INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car_id.car_id, inserted_images.image_id
-FROM inserted_car_id, inserted_images)
+    image_junction AS (
+INSERT INTO car_image_urls_junction (car_id, image_id)
+SELECT inserted_car.car_id, inserted_images.image_id
+FROM inserted_car, inserted_images)
 
 INSERT INTO car_features_junction (car_id, feature_id)
-SELECT inserted_car_id.car_id, features.feature_id
-FROM inserted_car_id, (VALUES (1), (2), (5), (6), (7)) AS features(feature_id);
+SELECT inserted_car.car_id, features.feature_id
+FROM inserted_car, (VALUES (1), (2), (5), (6), (7)) AS features(feature_id);
 
 
 -- Fourth car
-WITH inserted_car_id AS (
+WITH inserted_car AS (
 INSERT INTO cars (vin, make_id, model_id, body_type_id, color_id, fuel_type_id, transmission_type_id, drivetrain_id, doors_id, seats_id, production_year, mileage, engine_power, engine_capacity, is_damaged)
 VALUES
     ('ABC12345678901237', 4, 12, 8, 3, 4, 1, 2, 4, 5, 2011, 150000, 167, 1996, FALSE)
@@ -243,13 +246,14 @@ VALUES
     RETURNING image_id
     ),
 
-    image_juction AS (INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car_id.car_id, inserted_images.image_id
-FROM inserted_car_id, inserted_images)
+    image_junction AS (
+INSERT INTO car_image_urls_junction (car_id, image_id)
+SELECT inserted_car.car_id, inserted_images.image_id
+FROM inserted_car, inserted_images)
 
 INSERT INTO car_features_junction (car_id, feature_id)
-SELECT inserted_car_id.car_id, features.feature_id
-FROM inserted_car_id, (VALUES (1), (2), (3), (5), (7)) AS features(feature_id);
+SELECT inserted_car.car_id, features.feature_id
+FROM inserted_car, (VALUES (1), (2), (3), (5), (7)) AS features(feature_id);
 
 
 -- Advert attributes
@@ -282,7 +286,7 @@ VALUES
     RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, advert_phone_numbers)
+INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
 SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
 FROM inserted_advert, inserted_phone_numbers;
 
@@ -302,7 +306,7 @@ VALUES
     RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, advert_phone_numbers)
+INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
 SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
 FROM inserted_advert, inserted_phone_numbers;
 
@@ -322,7 +326,7 @@ VALUES
     RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, advert_phone_numbers)
+INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
 SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
 FROM inserted_advert, inserted_phone_numbers;
 
@@ -342,6 +346,6 @@ VALUES
     RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, advert_phone_numbers)
+INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
 SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
 FROM inserted_advert, inserted_phone_numbers;
