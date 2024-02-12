@@ -161,17 +161,13 @@ VALUES
     ),
 
     inserted_images AS (
-INSERT INTO car_image_urls (image_url)
-VALUES
+INSERT INTO car_image_urls (car_id, image_url)
+SELECT inserted_car.car_id, images.image_url
+FROM inserted_car, (VALUES
     ('https://iili.io/Ja9nYej.jpg'),
-    ('https://iili.io/Jad72se.jpg')
-    RETURNING image_id
-    ),
-
-    image_junction AS (
-INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car.car_id, inserted_images.image_id
-FROM inserted_car, inserted_images)
+    ('https://iili.io/Jad72se.jpg'))
+    AS images(image_url)
+    )
 
 INSERT INTO car_features_junction (car_id, feature_id)
 SELECT inserted_car.car_id, features.feature_id
@@ -187,17 +183,13 @@ VALUES
     ),
 
     inserted_images AS (
-INSERT INTO car_image_urls (image_url)
-VALUES
+INSERT INTO car_image_urls (car_id, image_url)
+SELECT inserted_car.car_id, images.image_url
+FROM inserted_car, (VALUES
     ('https://iili.io/Ja9nYmn.jpg'),
-    ('https://iili.io/Jad72vc.jpg')
-    RETURNING image_id
-    ),
-
-    image_junction AS (
-INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car.car_id, inserted_images.image_id
-FROM inserted_car, inserted_images)
+    ('https://iili.io/Jad72vc.jpg'))
+    AS images(image_url)
+    )
 
 INSERT INTO car_features_junction (car_id, feature_id)
 SELECT inserted_car.car_id, features.feature_id
@@ -213,17 +205,13 @@ VALUES
     ),
 
     inserted_images AS (
-INSERT INTO car_image_urls (image_url)
-VALUES
+INSERT INTO car_image_urls (car_id, image_url)
+SELECT inserted_car.car_id, images.image_url
+FROM inserted_car, (VALUES
     ('https://iili.io/Ja9nYcs.jpg'),
-    ('https://iili.io/Jad72tv.jpg')
-    RETURNING image_id
-    ),
-
-    image_junction AS (
-INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car.car_id, inserted_images.image_id
-FROM inserted_car, inserted_images)
+    ('https://iili.io/Jad72tv.jpg'))
+    AS images(image_url)
+    )
 
 INSERT INTO car_features_junction (car_id, feature_id)
 SELECT inserted_car.car_id, features.feature_id
@@ -239,17 +227,13 @@ VALUES
     ),
 
     inserted_images AS (
-INSERT INTO car_image_urls (image_url)
-VALUES
+INSERT INTO car_image_urls (car_id, image_url)
+SELECT inserted_car.car_id, images.image_url
+FROM inserted_car, (VALUES
     ('https://iili.io/Ja9nYis.jpg'),
-    ('https://iili.io/Jad72qv.jpg')
-    RETURNING image_id
-    ),
-
-    image_junction AS (
-INSERT INTO car_image_urls_junction (car_id, image_id)
-SELECT inserted_car.car_id, inserted_images.image_id
-FROM inserted_car, inserted_images)
+    ('https://iili.io/Jad72qv.jpg'))
+    AS images(image_url)
+    )
 
 INSERT INTO car_features_junction (car_id, feature_id)
 SELECT inserted_car.car_id, features.feature_id
@@ -276,19 +260,14 @@ INSERT INTO adverts (seller_id, car_id, title, description, location_id, price)
 VALUES
     (1, 1, 'Volkswagen Passat', 'Really nice Passat. Buy it pls.', 1, 99000)
     RETURNING advert_id
-    ),
-
-    inserted_phone_numbers AS (
-INSERT INTO advert_phone_numbers (phone_number)
-VALUES
-    ('123456789'),
-    ('987654321')
-    RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
-SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
-FROM inserted_advert, inserted_phone_numbers;
+INSERT INTO advert_phone_numbers (advert_id, phone_number)
+SELECT inserted_advert.advert_id, phone_numbers.phone_number
+FROM inserted_advert, (VALUES
+                           ('123456789'),
+                           ('987654321'))
+    AS phone_numbers(phone_number);
 
 
 -- Second advert
@@ -297,18 +276,13 @@ INSERT INTO adverts (seller_id, car_id, title, description, location_id, price)
 VALUES
     (3, 2, 'Skoda Octavia', 'Nice Skodunia.', 2, 35000)
     RETURNING advert_id
-    ),
-
-    inserted_phone_numbers AS (
-INSERT INTO advert_phone_numbers (phone_number)
-VALUES
-    ('123123123')
-    RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
-SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
-FROM inserted_advert, inserted_phone_numbers;
+INSERT INTO advert_phone_numbers (advert_id, phone_number)
+SELECT inserted_advert.advert_id, phone_numbers.phone_number
+FROM inserted_advert, (VALUES
+                           ('123123123'))
+    AS phone_numbers(phone_number);
 
 
 -- Third advert
@@ -317,18 +291,13 @@ INSERT INTO adverts (seller_id, car_id, title, description, location_id, price)
 VALUES
     (2, 3, 'BMW 3 Series', 'BMW wruuuum', 3, 45000)
     RETURNING advert_id
-    ),
-
-    inserted_phone_numbers AS (
-INSERT INTO advert_phone_numbers (phone_number)
-VALUES
-    ('321321321')
-    RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
-SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
-FROM inserted_advert, inserted_phone_numbers;
+INSERT INTO advert_phone_numbers (advert_id, phone_number)
+SELECT inserted_advert.advert_id, phone_numbers.phone_number
+FROM inserted_advert, (VALUES
+                           ('321321321'))
+    AS phone_numbers(phone_number);
 
 
 -- Fourth advert
@@ -337,15 +306,10 @@ INSERT INTO adverts (seller_id, car_id, title, description, location_id, price)
 VALUES
     (1, 4, 'Opel Insignia', 'Opel wow', 2, 43000)
     RETURNING advert_id
-    ),
-
-    inserted_phone_numbers AS (
-INSERT INTO advert_phone_numbers (phone_number)
-VALUES
-    ('432101234')
-    RETURNING phone_number_id
     )
 
-INSERT INTO advert_phone_numbers_junction (advert_id, phone_number_id)
-SELECT inserted_advert.advert_id, inserted_phone_numbers.phone_number_id
-FROM inserted_advert, inserted_phone_numbers;
+INSERT INTO advert_phone_numbers (advert_id, phone_number)
+SELECT inserted_advert.advert_id, phone_numbers.phone_number
+FROM inserted_advert, (VALUES
+                           ('432101234'))
+    AS phone_numbers(phone_number);

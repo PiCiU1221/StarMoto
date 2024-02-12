@@ -28,8 +28,7 @@ CREATE TABLE car_models
     model_id   BIGSERIAL PRIMARY KEY,
     model_name VARCHAR(255)                          NOT NULL,
     make_id    BIGINT REFERENCES car_makes (make_id) NOT NULL,
-    UNIQUE (model_name, make_id),
-    UNIQUE (model_id, make_id)
+    UNIQUE (model_name, make_id)
 );
 
 CREATE TABLE car_body_types
@@ -65,13 +64,13 @@ CREATE TABLE car_drivetrain_types
 CREATE TABLE car_door_counts
 (
     door_count_id BIGSERIAL PRIMARY KEY,
-    door_count    BIGINT NOT NULL UNIQUE
+    door_count    INTEGER NOT NULL UNIQUE
 );
 
 CREATE TABLE car_seat_counts
 (
     seat_count_id BIGSERIAL PRIMARY KEY,
-    seat_count    BIGINT NOT NULL UNIQUE
+    seat_count    INTEGER NOT NULL UNIQUE
 );
 
 CREATE TABLE cars
@@ -106,6 +105,7 @@ CREATE TABLE car_features
 CREATE TABLE car_image_urls
 (
     image_id   BIGSERIAL PRIMARY KEY,
+    car_id BIGINT REFERENCES cars (car_id) ON DELETE CASCADE NOT NULL,
     image_url  VARCHAR(255)                           NOT NULL,
     created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -113,15 +113,8 @@ CREATE TABLE car_image_urls
 CREATE TABLE car_features_junction
 (
     car_id     BIGINT REFERENCES cars (car_id) ON DELETE CASCADE NOT NULL,
-    feature_id BIGINT REFERENCES car_features (feature_id)       NOT NULL,
+    feature_id BIGINT REFERENCES car_features (feature_id) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (car_id, feature_id)
-);
-
-CREATE TABLE car_image_urls_junction
-(
-    car_id   BIGINT REFERENCES cars (car_id) ON DELETE CASCADE NOT NULL,
-    image_id BIGINT REFERENCES car_image_urls (image_id)       NOT NULL,
-    PRIMARY KEY (car_id, image_id)
 );
 
 
@@ -130,21 +123,15 @@ CREATE TABLE car_image_urls_junction
 CREATE TABLE regions
 (
     region_id   BIGSERIAL PRIMARY KEY,
-    region_name VARCHAR(50) UNIQUE
+    region_name VARCHAR(50) NOT NULL, UNIQUE
 );
 
 CREATE TABLE locations
 (
     location_id BIGSERIAL PRIMARY KEY,
-    region_id   BIGINT REFERENCES regions (region_id) NOT NULL,
+    region_id   BIGINT REFERENCES regions (region_id) ON DELETE CASCADE NOT NULL,
     postal_code CHAR(6)                               NOT NULL,
     city        VARCHAR(100)                          NOT NULL
-);
-
-CREATE TABLE advert_phone_numbers
-(
-    phone_number_id BIGSERIAL PRIMARY KEY,
-    phone_number    CHAR(9) NOT NULL
 );
 
 CREATE TABLE adverts
@@ -160,9 +147,9 @@ CREATE TABLE adverts
     updated_at  TIMESTAMP(0) DEFAULT NULL
 );
 
-CREATE TABLE advert_phone_numbers_junction
+CREATE TABLE advert_phone_numbers
 (
-    advert_id       BIGINT REFERENCES adverts (advert_id) ON DELETE CASCADE  NOT NULL,
-    phone_number_id BIGINT REFERENCES advert_phone_numbers (phone_number_id) NOT NULL,
-    PRIMARY KEY (advert_id, phone_number_id)
+    phone_number_id BIGSERIAL PRIMARY KEY,
+    advert_id BIGINT REFERENCES adverts (advert_id) ON DELETE CASCADE NOT NULL,
+    phone_number    CHAR(9) NOT NULL
 );
