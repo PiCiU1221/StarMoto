@@ -21,7 +21,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(name = "username", unique = true, nullable = false)
     @NotBlank(message = "Username is required")

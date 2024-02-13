@@ -1,6 +1,7 @@
 package com.piciu1221.starmoto.test.service;
 
 import com.piciu1221.starmoto.dto.RegistrationRequestDTO;
+import com.piciu1221.starmoto.dto.RegistrationResponseDTO;
 import com.piciu1221.starmoto.exception.RegistrationException;
 import com.piciu1221.starmoto.model.User;
 import com.piciu1221.starmoto.repository.UserRepository;
@@ -46,7 +47,6 @@ class UserServiceTest {
 
     @Test
     void registerUser_SuccessfulRegistration_ReturnsSavedUser() {
-        // Arrange
         RegistrationRequestDTO registrationRequestDTO = new RegistrationRequestDTO();
         registrationRequestDTO.setUsername("newUser");
         registrationRequestDTO.setEmail("new@example.com");
@@ -57,22 +57,18 @@ class UserServiceTest {
         mockUser.setEmail(registrationRequestDTO.getEmail());
         mockUser.setPassword(registrationRequestDTO.getPassword());
 
-        // Mock the repository behavior
         when(userRepository.existsByUsername(any())).thenReturn(false);
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(mockUser);
 
-        // Mock the password encoder
         when(passwordEncoder.encode(any())).thenReturn("hashedPassword");
 
-        // Act
-        User savedUser = userService.registerUser(registrationRequestDTO);
+        RegistrationResponseDTO savedUser = userService.registerUser(registrationRequestDTO);
 
-        // Assert
-        // Verify that the repository's save method was called with the correct user
         verify(userRepository, times(1)).save(any());
 
-        assertEquals(mockUser, savedUser);
+        assertEquals(mockUser.getUsername(), savedUser.getUsername());
+        assertEquals(mockUser.getEmail(), savedUser.getEmail());
     }
 
     @Test

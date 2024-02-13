@@ -44,7 +44,6 @@ public class AuthController {
 
     @GetMapping("/logout")
     public ResponseEntity<String> logout() {
-        // Your logout logic
         return new ResponseEntity<>("Logout successful", HttpStatus.OK);
     }
 }

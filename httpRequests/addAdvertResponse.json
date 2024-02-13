@@ -1,0 +1,36 @@
+{
+  "advertId": 8,
+  "sellerId": 2,
+  "title": "Skoda Fabia",
+  "description": "Really cool fast car",
+  "city": "Stargard",
+  "price": 25000,
+  "phoneNumbers": [
+    "123454321",
+    "556677889"
+  ],
+  "carInfo": {
+    "vin": "1HGCM82633A000098",
+    "make": "Skoda",
+    "model": "Fabia",
+    "bodyType": "City Car",
+    "color": "Gray",
+    "fuelType": "Petrol",
+    "transmissionType": "Manual",
+    "drivetrainType": "Front-Wheel Drive",
+    "doorsCount": 4,
+    "seatsCount": 5,
+    "productionYear": 2010,
+    "mileage": 51000,
+    "enginePower": 71,
+    "engineCapacity": 1198,
+    "isDamaged": false,
+    "features": [
+      "Air Conditioning",
+      "Power Windows"
+    ],
+    "imageUrls": [
+      "https://iili.io/J1pAHwF.jpg"
+    ]
+  }
+}

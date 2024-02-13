@@ -60,7 +60,7 @@ public class UserControllerTest {
         registrationRequestDTO.setPassword("testPassword");
 
         User returnedUser = new User();
-        returnedUser.setId(1);
+        returnedUser.setId(1L);
         returnedUser.setUsername(registrationRequestDTO.getUsername());
         returnedUser.setEmail(registrationRequestDTO.getEmail());
         returnedUser.setCreatedAt(LocalDateTime.now());

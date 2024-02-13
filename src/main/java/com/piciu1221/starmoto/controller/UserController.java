@@ -1,9 +1,9 @@
 package com.piciu1221.starmoto.controller;
 
 import com.piciu1221.starmoto.dto.RegistrationRequestDTO;
+import com.piciu1221.starmoto.dto.RegistrationResponseDTO;
 import com.piciu1221.starmoto.exception.ApiErrorResponse;
 import com.piciu1221.starmoto.exception.RegistrationException;
-import com.piciu1221.starmoto.model.User;
 import com.piciu1221.starmoto.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) {
         try {
-            User savedUser = userService.registerUser(registrationRequestDTO);
+            RegistrationResponseDTO savedUser = userService.registerUser(registrationRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(savedUser);
         } catch (RegistrationException e) {

@@ -2,7 +2,7 @@ package com.piciu1221.starmoto.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.piciu1221.starmoto.exception.CarAddException;
+import com.piciu1221.starmoto.exception.AdvertAddException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -64,7 +64,7 @@ public class CarImageService {
             String responseBody = responseEntity.getBody();
             return extractImageUrlFromResponse(responseBody);
         } else {
-            throw new CarAddException("Error uploading image: " + responseEntity.getStatusCodeValue() + " - " + responseEntity.getBody());
+            throw new AdvertAddException("Error uploading image: " + responseEntity.getStatusCodeValue() + " - " + responseEntity.getBody());
         }
     }
 

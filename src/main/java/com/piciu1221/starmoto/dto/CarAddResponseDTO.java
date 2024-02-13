@@ -1,21 +1,16 @@
 package com.piciu1221.starmoto.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.piciu1221.starmoto.model.Car;
-import com.piciu1221.starmoto.model.reference.CarFeature;
-import com.piciu1221.starmoto.model.reference.CarImageUrl;
+import com.piciu1221.starmoto.model.carReference.CarFeature;
+import com.piciu1221.starmoto.model.carReference.CarImageUrl;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class CarAddResponseDTO {
-
-    private Integer carId;
-    private Integer sellerId;
+    private Long carId;
     private String vin;
     private String make;
     private String model;
@@ -27,23 +22,16 @@ public class CarAddResponseDTO {
     private Integer doors;
     private Integer seats;
     private Integer productionYear;
-    private BigDecimal price;
     private Integer mileage;
     private Integer enginePower;
     private Integer engineCapacity;
     private Boolean isDamaged;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdAt;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updatedAt;
-    
     private List<String> features;
     private List<String> imageUrls;
 
     public CarAddResponseDTO(Car car) {
         this.carId = car.getCarId();
-        this.sellerId = car.getSeller().getId();
         this.vin = car.getVin();
         this.make = car.getMake().getMakeName();
         this.model = car.getModel().getModelName();
@@ -55,13 +43,10 @@ public class CarAddResponseDTO {
         this.doors = car.getDoors().getDoorCount();
         this.seats = car.getSeats().getSeatsCount();
         this.productionYear = car.getProductionYear();
-        this.price = car.getPrice();
         this.mileage = car.getMileage();
         this.enginePower = car.getEnginePower();
         this.engineCapacity = car.getEngineCapacity();
         this.isDamaged = car.getIsDamaged();
-        this.createdAt = car.getCreatedAt();
-        this.updatedAt = car.getUpdatedAt();
 
         // Car features
         List<CarFeature> carFeatures = car.getFeatures();
@@ -74,7 +59,7 @@ public class CarAddResponseDTO {
         this.features = features;
 
         // Car imagesUrls
-        List<CarImageUrl> carImages = car.getImageUrls();
+        List<CarImageUrl> carImages = car.getImages();
         List<String> images = new ArrayList<>();
 
         for (CarImageUrl image : carImages) {
