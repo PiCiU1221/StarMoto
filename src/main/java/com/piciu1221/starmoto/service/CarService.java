@@ -1,14 +1,12 @@
 package com.piciu1221.starmoto.service;
 
 import com.piciu1221.starmoto.dto.CarAddRequestDTO;
-import com.piciu1221.starmoto.dto.CarAddResponseDTO;
-import com.piciu1221.starmoto.exception.CarAddException;
+import com.piciu1221.starmoto.exception.AdvertAddException;
 import com.piciu1221.starmoto.model.Car;
-import com.piciu1221.starmoto.model.reference.CarFeature;
-import com.piciu1221.starmoto.model.reference.CarImageUrl;
+import com.piciu1221.starmoto.model.carReference.CarFeature;
+import com.piciu1221.starmoto.model.carReference.CarImageUrl;
 import com.piciu1221.starmoto.repository.CarRepository;
-import com.piciu1221.starmoto.repository.UserRepository;
-import com.piciu1221.starmoto.repository.reference.*;
+import com.piciu1221.starmoto.repository.carReference.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,10 +22,9 @@ import java.util.List;
 public class CarService {
 
     private final CarRepository carRepository;
-    private final UserRepository userRepository;
     private final CarMakeRepository carMakeRepository;
     private final CarModelRepository carModelRepository;
-    private final CarTypeRepository carTypeRepository;
+    private final CarBodyTypeRepository carBodyTypeRepository;
     private final CarColorRepository carColorRepository;
     private final CarFuelTypeRepository carFuelTypeRepository;
     private final CarTransmissionTypeRepository carTransmissionTypeRepository;
@@ -40,96 +37,91 @@ public class CarService {
     private final CarImageService carImageService;
 
     @Transactional
-    public CarAddResponseDTO addCar(@Valid CarAddRequestDTO carAddRequestDTO) throws IOException {
+    public Car addCar(@Valid CarAddRequestDTO carAddRequestDTO) throws IOException {
 
         Car car = new Car();
 
         if (carRepository.existsByVin(carAddRequestDTO.getVin())) {
-            throw new CarAddException("Vin is already in use");
+            throw new AdvertAddException("Vin is already in use");
         }
 
         car.setVin(carAddRequestDTO.getVin());
 
-        car.setSeller(userRepository.findById(carAddRequestDTO.getSellerId())
-                .orElseThrow(() -> new CarAddException("Seller not found")));
+        car.setMake(carMakeRepository.findByMakeName(carAddRequestDTO.getMake())
+                .orElseThrow(() -> new AdvertAddException("Car make not found")));
 
-        car.setMake(carMakeRepository.findByMakeName(carAddRequestDTO.getMakeName())
-                .orElseThrow(() -> new CarAddException("Car make not found")));
+        car.setModel(carModelRepository.findByModelNameAndMakeId(carAddRequestDTO.getModel(), car.getMake())
+                .orElseThrow(() -> new AdvertAddException("Car model not found")));
 
-        car.setModel(carModelRepository.findByModelNameAndMakeId(carAddRequestDTO.getModelName(), car.getMake())
-                .orElseThrow(() -> new CarAddException("Car model not found")));
+        car.setBodyType(carBodyTypeRepository.findByBodyTypeName(carAddRequestDTO.getBodyType())
+                .orElseThrow(() -> new AdvertAddException("Car body type not found")));
 
-        car.setBodyType(carTypeRepository.findByBodyTypeName(carAddRequestDTO.getBodyTypeName())
-                .orElseThrow(() -> new CarAddException("Car body type not found")));
+        car.setColor(carColorRepository.findByColorName(carAddRequestDTO.getColor())
+                .orElseThrow(() -> new AdvertAddException("Car color not found")));
 
-        car.setColor(carColorRepository.findByColorName(carAddRequestDTO.getColorName())
-                .orElseThrow(() -> new CarAddException("Car color not found")));
+        car.setFuelType(carFuelTypeRepository.findByFuelTypeName(carAddRequestDTO.getFuelType())
+                .orElseThrow(() -> new AdvertAddException("Car fuel type not found")));
 
-        car.setFuelType(carFuelTypeRepository.findByFuelTypeName(carAddRequestDTO.getFuelTypeName())
-                .orElseThrow(() -> new CarAddException("Car fuel type not found")));
+        car.setTransmissionType(carTransmissionTypeRepository.findByTransmissionTypeName(carAddRequestDTO.getTransmissionType())
+                .orElseThrow(() -> new AdvertAddException("Car transmission type not found")));
 
-        car.setTransmissionType(carTransmissionTypeRepository.findByTransmissionTypeName(carAddRequestDTO.getTransmissionTypeName())
-                .orElseThrow(() -> new CarAddException("Car transmission type not found")));
-
-        car.setDrivetrainType(carDrivetrainTypeRepository.findByDrivetrainTypeName(carAddRequestDTO.getDrivetrainTypeName())
-                .orElseThrow(() -> new CarAddException("Car drivetrain type not found")));
+        car.setDrivetrainType(carDrivetrainTypeRepository.findByDrivetrainTypeName(carAddRequestDTO.getDrivetrainType())
+                .orElseThrow(() -> new AdvertAddException("Car drivetrain type not found")));
 
         car.setDoors(carDoorCountRepository.findByDoorCount(carAddRequestDTO.getDoorsCount())
-                .orElseThrow(() -> new CarAddException("Car door count not found")));
+                .orElseThrow(() -> new AdvertAddException("Car door count not found")));
 
         car.setSeats(carSeatCountRepository.findBySeatsCount(carAddRequestDTO.getSeatsCount())
-                .orElseThrow(() -> new CarAddException("Car seat count not found")));
+                .orElseThrow(() -> new AdvertAddException("Car seat count not found")));
 
         car.setProductionYear(carAddRequestDTO.getProductionYear());
-        car.setPrice(carAddRequestDTO.getPrice());
         car.setMileage(carAddRequestDTO.getMileage());
         car.setEnginePower(carAddRequestDTO.getEnginePower());
         car.setEngineCapacity(carAddRequestDTO.getEngineCapacity());
         car.setIsDamaged(carAddRequestDTO.getIsDamaged());
 
         // Car features
-
         List<String> features = carAddRequestDTO.getFeatures();
         List<CarFeature> carFeatures = new ArrayList<>();
 
         for (String feature : features) {
             CarFeature carFeature = carFeatureRepository.findByFeatureName(feature);
+
+            if (carFeature == null) {
+                throw new AdvertAddException("Feature: " + feature + " not in the database");
+            }
+
             carFeatures.add(carFeature);
         }
 
         car.setFeatures(carFeatures);
 
         // Car images
-
         List<MultipartFile> images = carAddRequestDTO.getImages();
         List<CarImageUrl> carImageUrls = new ArrayList<>();
 
         for (MultipartFile image : images) {
-            String imageUrl = null;
+            String imageUrl;
 
             try {
                 imageUrl = carImageService.uploadImage(image);
-            } catch (CarAddException e) {
-                throw new CarAddException(e.getMessage());
-            }
-
-            if (carImageUrlRepository.existsByImageUrl(imageUrl)) {
-                throw new CarAddException("One image has already been uploaded. Duplicate detected");
+            } catch (AdvertAddException e) {
+                throw new AdvertAddException(e.getMessage());
             }
 
             if (imageUrl != null) {
                 CarImageUrl carImageUrl = new CarImageUrl();
                 carImageUrl.setImageUrl(imageUrl);
+                carImageUrl.setCar(car);
 
-                CarImageUrl savedCarImageUrl = carImageUrlRepository.save(carImageUrl);
-                carImageUrls.add(savedCarImageUrl);
+                carImageUrls.add(carImageUrl);
             } else {
-                throw new CarAddException("Failed to upload one or more images");
+                throw new AdvertAddException("Failed to upload one or more images");
             }
         }
 
-        car.setImageUrls(carImageUrls);
+        car.setImages(carImageUrls);
 
-        return new CarAddResponseDTO(carRepository.save(car));
+        return carRepository.save(car);
     }
 }

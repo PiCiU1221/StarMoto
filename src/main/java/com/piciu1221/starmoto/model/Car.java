@@ -18,7 +18,6 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "car_id")
-    @NotNull
     private Long carId;
 
     @Column(name = "vin", unique = true, nullable = false, length = 17)
@@ -104,7 +103,7 @@ public class Car {
     @Size(max = 7, message = "Up to 7 features are allowed")
     private List<CarFeature> features;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     private List<CarImageUrl> images;
 }

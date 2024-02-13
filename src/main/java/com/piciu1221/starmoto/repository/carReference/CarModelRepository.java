@@ -1,7 +1,7 @@
-package com.piciu1221.starmoto.repository.reference;
+package com.piciu1221.starmoto.repository.carReference;
 
-import com.piciu1221.starmoto.model.reference.CarMake;
-import com.piciu1221.starmoto.model.reference.CarModel;
+import com.piciu1221.starmoto.model.carReference.CarMake;
+import com.piciu1221.starmoto.model.carReference.CarModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

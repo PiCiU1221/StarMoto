@@ -1,4 +1,4 @@
-package com.piciu1221.starmoto.model.advertReferenceTable;
+package com.piciu1221.starmoto.model.advertReference;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,6 @@ public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "region_id")
-    @NotNull
     private Long regionId;
 
     @Column(name = "region_name", length = 50, unique = true)

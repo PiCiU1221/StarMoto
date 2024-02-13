@@ -10,9 +10,8 @@ import lombok.Data;
 public class CarBodyType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Column(name = "body_type_id")
-    private Integer bodyTypeId;
+    private Long bodyTypeId;
 
     @Column(name = "body_type_name", nullable = false)
     @NotNull

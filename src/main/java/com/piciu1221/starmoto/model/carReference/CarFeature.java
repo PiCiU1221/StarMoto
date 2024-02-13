@@ -2,7 +2,6 @@ package com.piciu1221.starmoto.model.carReference;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -13,8 +12,7 @@ public class CarFeature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feature_id")
-    @NotNull
-    private Integer featureId;
+    private Long featureId;
 
     @Column(name = "feature_name", nullable = false, unique = true, length = 50)
     @NotBlank

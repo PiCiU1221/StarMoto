@@ -1,6 +1,7 @@
 package com.piciu1221.starmoto.model.carReference;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.piciu1221.starmoto.model.Car;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -16,9 +17,9 @@ public class CarImageUrl {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
-    @NotNull
-    private Integer imageId;
+    private Long imageId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "car_id")
     @NotNull

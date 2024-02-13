@@ -8,13 +8,12 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "car_models",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"model_name", "make_id"})})
+        uniqueConstraints = {@UniqueConstraint(name = "car_models_model_name_make_id_key", columnNames = {"model_name", "make_id"})})
 public class CarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "model_id")
-    @NotNull
-    private Integer modelId;
+    private Long modelId;
 
     @Column(name = "model_name", nullable = false)
     @NotBlank

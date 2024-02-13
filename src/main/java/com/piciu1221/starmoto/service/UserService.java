@@ -1,6 +1,7 @@
 package com.piciu1221.starmoto.service;
 
 import com.piciu1221.starmoto.dto.RegistrationRequestDTO;
+import com.piciu1221.starmoto.dto.RegistrationResponseDTO;
 import com.piciu1221.starmoto.exception.RegistrationException;
 import com.piciu1221.starmoto.model.User;
 import com.piciu1221.starmoto.repository.UserRepository;
@@ -32,7 +33,7 @@ public class UserService implements UserDetailsService {
         this.validator = validator;
     }
 
-    public User registerUser(RegistrationRequestDTO registrationRequestDTO) throws RegistrationException, ConstraintViolationException {
+    public RegistrationResponseDTO registerUser(RegistrationRequestDTO registrationRequestDTO) throws RegistrationException, ConstraintViolationException {
         User user = new User();
         user.setEmail(registrationRequestDTO.getEmail());
         user.setUsername(registrationRequestDTO.getUsername());
@@ -41,7 +42,7 @@ public class UserService implements UserDetailsService {
         validateUserRegistration(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        return userRepository.save(user);
+        return new RegistrationResponseDTO(userRepository.save(user));
     }
 
     public void validateUserRegistration(User user) {

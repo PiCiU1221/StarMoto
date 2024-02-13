@@ -11,8 +11,7 @@ public class CarDoorCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "door_count_id")
-    @NotNull
-    private Integer doorId;
+    private Long doorId;
 
     @Column(name = "door_count", nullable = false, unique = true)
     @NotNull

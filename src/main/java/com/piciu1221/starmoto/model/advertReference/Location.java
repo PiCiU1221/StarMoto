@@ -1,4 +1,4 @@
-package com.piciu1221.starmoto.model.advertReferenceTable;
+package com.piciu1221.starmoto.model.advertReference;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +14,6 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id")
-    @NotNull
     private Long locationId;
 
     @ManyToOne
