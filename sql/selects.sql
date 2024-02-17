@@ -32,8 +32,8 @@ FROM cars c
          INNER JOIN car_drivetrain_types drivetrain ON c.drivetrain_id = drivetrain.drivetrain_type_id
          INNER JOIN car_door_counts doors ON c.doors_id = doors.door_count_id
          INNER JOIN car_seat_counts seats ON c.seats_id = seats.seat_count_id
-         INNER JOIN car_features_junction cf ON c.car_id = cf.car_id
-         INNER JOIN car_features f ON cf.feature_id = f.feature_id
+         LEFT JOIN car_features_junction cf ON c.car_id = cf.car_id
+         LEFT JOIN car_features f ON cf.feature_id = f.feature_id
          INNER JOIN car_image_urls i ON c.car_id = i.car_id
 GROUP BY c.car_id, make.make_name, model.model_name, body_type.body_type_name,
          color.color_name, fuel_type.fuel_type_name, transmission.transmission_type_name,
@@ -82,8 +82,8 @@ FROM adverts a
          INNER JOIN car_drivetrain_types drivetrain ON c.drivetrain_id = drivetrain.drivetrain_type_id
          INNER JOIN car_door_counts doors ON c.doors_id = doors.door_count_id
          INNER JOIN car_seat_counts seats ON c.seats_id = seats.seat_count_id
-         INNER JOIN car_features_junction fj ON c.car_id = fj.car_id
-         INNER JOIN car_features f ON fj.feature_id = f.feature_id
+         LEFT JOIN car_features_junction fj ON c.car_id = fj.car_id
+         LEFT JOIN car_features f ON fj.feature_id = f.feature_id
          INNER JOIN car_image_urls i ON c.car_id = i.car_id
 GROUP BY a.advert_id, u.username, a.title, a.description, l.city, a.price, c.car_id, make.make_name, model.model_name,
          body_type.body_type_name, color.color_name, fuel_type.fuel_type_name, transmission.transmission_type_name,

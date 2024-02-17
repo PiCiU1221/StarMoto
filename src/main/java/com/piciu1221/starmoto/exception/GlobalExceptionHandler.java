@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 
         Map<String, String> details = fieldErrors.stream()
+                .filter(fieldError -> fieldError.getDefaultMessage() != null)
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage, (existing, replacement) -> existing + ", " + replacement));
 
         return new ApiErrorResponse("ValidationException",

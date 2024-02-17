@@ -64,7 +64,7 @@ public class CarImageService {
             String responseBody = responseEntity.getBody();
             return extractImageUrlFromResponse(responseBody);
         } else {
-            throw new AdvertAddException("Error uploading image: " + responseEntity.getStatusCodeValue() + " - " + responseEntity.getBody());
+            throw new AdvertAddException("Error uploading image: " + responseEntity.getStatusCode() + " - " + responseEntity.getBody());
         }
     }
 
