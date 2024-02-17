@@ -32,7 +32,6 @@ public class CarService {
     private final CarSeatCountRepository carSeatCountRepository;
     private final CarDrivetrainTypeRepository carDrivetrainTypeRepository;
     private final CarFeatureRepository carFeatureRepository;
-    private final CarImageUrlRepository carImageUrlRepository;
 
     private final CarImageService carImageService;
 
@@ -40,10 +39,6 @@ public class CarService {
     public Car addCar(@Valid CarAddRequestDTO carAddRequestDTO) throws IOException {
 
         Car car = new Car();
-
-        if (carRepository.existsByVin(carAddRequestDTO.getVin())) {
-            throw new AdvertAddException("Vin is already in use");
-        }
 
         car.setVin(carAddRequestDTO.getVin());
 
