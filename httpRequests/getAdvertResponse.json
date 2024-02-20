@@ -1,0 +1,38 @@
+{
+  "advertId": 1,
+  "sellerId": 1,
+  "title": "Volkswagen Passat",
+  "description": "Really nice Passat. Buy it pls.",
+  "city": "Stargard",
+  "price": 99000,
+  "phoneNumbers": [
+    "123456789",
+    "987654321"
+  ],
+  "carInfo": {
+    "vin": "ABC12345678901234",
+    "make": "Volkswagen",
+    "model": "Passat",
+    "bodyType": "Sedan",
+    "color": "Black",
+    "fuelType": "Diesel",
+    "transmissionType": "Automatic",
+    "drivetrainType": "Front-Wheel Drive",
+    "doorsCount": 4,
+    "seatsCount": 5,
+    "productionYear": 2017,
+    "mileage": 40000,
+    "enginePower": 180,
+    "engineCapacity": 2200,
+    "isDamaged": false,
+    "features": [
+      "Air Conditioning",
+      "Power Windows",
+      "Sunroof"
+    ],
+    "imageUrls": [
+      "https://iili.io/Ja9nYej.jpg",
+      "https://iili.io/Jad72se.jpg"
+    ]
+  }
+}

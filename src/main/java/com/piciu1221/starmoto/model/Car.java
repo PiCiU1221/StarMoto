@@ -94,7 +94,7 @@ public class Car {
     @NotNull
     private Boolean isDamaged;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "car_features_junction",
             joinColumns = @JoinColumn(name = "car_id"),
@@ -103,7 +103,7 @@ public class Car {
     @Size(max = 7, message = "Up to 7 features are allowed")
     private List<CarFeature> features;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "car_id")
     private List<CarImageUrl> images;
 }

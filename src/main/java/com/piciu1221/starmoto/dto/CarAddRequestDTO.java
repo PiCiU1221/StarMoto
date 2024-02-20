@@ -68,24 +68,24 @@ public class CarAddRequestDTO {
     @NotEmpty(message = "Images list cannot be empty")
     private List<MultipartFile> images;
 
-    public CarAddRequestDTO(AdvertAddRequestDTO advertAddRequestDTO) {
-        this.vin = advertAddRequestDTO.getVin();
-        this.make = advertAddRequestDTO.getMake();
-        this.model = advertAddRequestDTO.getModel();
-        this.bodyType = advertAddRequestDTO.getBodyType();
-        this.color = advertAddRequestDTO.getColor();
-        this.fuelType = advertAddRequestDTO.getFuelType();
-        this.transmissionType = advertAddRequestDTO.getTransmissionType();
-        this.drivetrainType = advertAddRequestDTO.getDrivetrainType();
-        this.doorsCount = advertAddRequestDTO.getDoorsCount();
-        this.seatsCount = advertAddRequestDTO.getSeatsCount();
-        this.productionYear = advertAddRequestDTO.getProductionYear();
-        this.mileage = advertAddRequestDTO.getMileage();
-        this.enginePower = advertAddRequestDTO.getEnginePower();
-        this.engineCapacity = advertAddRequestDTO.getEngineCapacity();
-        this.isDamaged = advertAddRequestDTO.getIsDamaged();
+    public CarAddRequestDTO(AdvertPostRequestDTO advertPOSTRequestDTO) {
+        this.vin = advertPOSTRequestDTO.getVin();
+        this.make = advertPOSTRequestDTO.getMake();
+        this.model = advertPOSTRequestDTO.getModel();
+        this.bodyType = advertPOSTRequestDTO.getBodyType();
+        this.color = advertPOSTRequestDTO.getColor();
+        this.fuelType = advertPOSTRequestDTO.getFuelType();
+        this.transmissionType = advertPOSTRequestDTO.getTransmissionType();
+        this.drivetrainType = advertPOSTRequestDTO.getDrivetrainType();
+        this.doorsCount = advertPOSTRequestDTO.getDoorsCount();
+        this.seatsCount = advertPOSTRequestDTO.getSeatsCount();
+        this.productionYear = advertPOSTRequestDTO.getProductionYear();
+        this.mileage = advertPOSTRequestDTO.getMileage();
+        this.enginePower = advertPOSTRequestDTO.getEnginePower();
+        this.engineCapacity = advertPOSTRequestDTO.getEngineCapacity();
+        this.isDamaged = advertPOSTRequestDTO.getIsDamaged();
 
-        this.features = advertAddRequestDTO.getFeatures();
-        this.images = advertAddRequestDTO.getImages();
+        this.features = advertPOSTRequestDTO.getFeatures();
+        this.images = advertPOSTRequestDTO.getImages();
     }
 }

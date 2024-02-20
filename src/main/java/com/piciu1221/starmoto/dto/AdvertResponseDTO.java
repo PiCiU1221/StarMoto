@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class AdvertAddResponseDTO {
+public class AdvertResponseDTO {
     private Long advertId;
     private Long sellerId;
     private String title;
@@ -22,7 +22,7 @@ public class AdvertAddResponseDTO {
 
     private CarInfo carInfo;
 
-    public AdvertAddResponseDTO(Advert advert) {
+    public AdvertResponseDTO(Advert advert) {
         this.advertId = advert.getAdvertId();
         this.sellerId = advert.getSeller().getUserId();
         this.title = advert.getTitle();
