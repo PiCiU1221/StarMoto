@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -74,5 +75,43 @@ public class AdvertService {
                 .orElseThrow(() -> new AdvertNotFoundException("Advert with ID " + id + " not found"));
 
         return new AdvertResponseDTO(advert);
+    }
+
+    @Transactional
+    public AdvertResponseDTO updateAdvert(Long id, @Valid AdvertPostRequestDTO advertPOSTRequestDTO) throws IOException {
+        Advert advert = advertRepository.findById(id)
+                .orElseThrow(() -> new AdvertNotFoundException("Advert with ID " + id + " not found"));
+
+        if (!Objects.equals(advert.getSeller().getUserId(), advertPOSTRequestDTO.getSellerId())) {
+            throw new AdvertAddException("Seller ID is different from the original one. Cannot update seller ID.");
+        }
+
+        CarAddRequestDTO carAddRequestDTO = new CarAddRequestDTO(advertPOSTRequestDTO);
+        Car car = carService.updateCar(advert.getCar().getCarId(), carAddRequestDTO);
+        advert.setCar(car);
+
+        advert.setTitle(advertPOSTRequestDTO.getTitle());
+        advert.setDescription(advertPOSTRequestDTO.getDescription());
+
+        Location location = locationRepository.findById(advertPOSTRequestDTO.getLocationId())
+                .orElseThrow(() -> new AdvertAddException("Location with ID " + advertPOSTRequestDTO.getLocationId() + " not found"));
+        advert.setLocation(location);
+
+        advert.setPrice(advertPOSTRequestDTO.getPrice());
+
+        // Phone numbers
+        advert.getPhoneNumbers().clear();
+        List<AdvertPhoneNumber> advertPhoneNumbers = new ArrayList<>();
+
+        for (String phoneNumber : advertPOSTRequestDTO.getPhoneNumbers()) {
+            AdvertPhoneNumber advertPhoneNumber = new AdvertPhoneNumber();
+            advertPhoneNumber.setPhoneNumber(phoneNumber);
+            advertPhoneNumber.setAdvert(advert);
+
+            advertPhoneNumbers.add(advertPhoneNumber);
+        }
+        advert.getPhoneNumbers().addAll(advertPhoneNumbers);
+
+        return new AdvertResponseDTO(advertRepository.save(advert));
     }
 }

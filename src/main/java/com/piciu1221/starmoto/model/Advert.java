@@ -26,7 +26,7 @@ public class Advert {
     @NotNull
     private User seller;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "car_id", nullable = false)
     @NotNull
     private Car car;
@@ -58,6 +58,6 @@ public class Advert {
     private LocalDateTime updatedAt = null;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "advert_id")
+    @JoinColumn(name = "advert_id", updatable = false)
     private List<AdvertPhoneNumber> phoneNumbers;
 }

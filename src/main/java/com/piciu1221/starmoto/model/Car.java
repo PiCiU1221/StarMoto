@@ -104,6 +104,6 @@ public class Car {
     private List<CarFeature> features;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "car_id")
+    @JoinColumn(name = "car_id", updatable = false)
     private List<CarImageUrl> images;
 }

@@ -4,6 +4,7 @@ import com.piciu1221.starmoto.dto.AdvertPostRequestDTO;
 import com.piciu1221.starmoto.dto.AdvertResponseDTO;
 import com.piciu1221.starmoto.exception.AdvertAddException;
 import com.piciu1221.starmoto.exception.AdvertNotFoundException;
+import com.piciu1221.starmoto.exception.AdvertUpdateException;
 import com.piciu1221.starmoto.exception.ApiErrorResponse;
 import com.piciu1221.starmoto.service.AdvertService;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class AdvertController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(savedAdvert);
         } catch (AdvertAddException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiErrorResponse("AdvertAddException", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -47,6 +48,24 @@ public class AdvertController {
         } catch (AdvertNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiErrorResponse("AdvertNotFoundException", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<?> updateAdvert(@PathVariable Long id, @Valid AdvertPostRequestDTO advertPOSTRequestDTO) {
+        try {
+            AdvertResponseDTO updatedAdvert = advertService.updateAdvert(id, advertPOSTRequestDTO);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(updatedAdvert);
+        } catch (AdvertNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiErrorResponse("AdvertNotFoundException", e.getMessage()));
+        } catch (AdvertUpdateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiErrorResponse("AdvertUpdateException", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred: " + e.getMessage()));

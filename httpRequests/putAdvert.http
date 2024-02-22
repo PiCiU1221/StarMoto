@@ -1,0 +1,117 @@
+PUT localhost:8080/api/v1/adverts/6
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="sellerId"
+
+2
+
+--boundary
+Content-Disposition: form-data; name="title"
+
+Skoda Fabia
+
+--boundary
+Content-Disposition: form-data; name="description"
+
+Even faster now
+
+--boundary
+Content-Disposition: form-data; name="locationId"
+
+1
+
+--boundary
+Content-Disposition: form-data; name="price"
+
+25000
+
+--boundary
+Content-Disposition: form-data; name="phoneNumbers"
+
+123454321, 556677889
+
+--boundary
+Content-Disposition: form-data; name="vin"
+
+1HGCM82633A000098
+
+--boundary
+Content-Disposition: form-data; name="make"
+
+Skoda
+
+--boundary
+Content-Disposition: form-data; name="model"
+
+Fabia
+
+--boundary
+Content-Disposition: form-data; name="bodyType"
+
+City Car
+
+--boundary
+Content-Disposition: form-data; name="color"
+
+Gray
+
+--boundary
+Content-Disposition: form-data; name="fuelType"
+
+Petrol
+
+--boundary
+Content-Disposition: form-data; name="transmissionType"
+
+Manual
+
+--boundary
+Content-Disposition: form-data; name="drivetrainType"
+
+Front-Wheel Drive
+
+--boundary
+Content-Disposition: form-data; name="doorsCount"
+
+4
+
+--boundary
+Content-Disposition: form-data; name="seatsCount"
+
+5
+
+--boundary
+Content-Disposition: form-data; name="productionYear"
+
+2010
+
+--boundary
+Content-Disposition: form-data; name="mileage"
+
+51000
+
+--boundary
+Content-Disposition: form-data; name="enginePower"
+
+71
+
+--boundary
+Content-Disposition: form-data; name="engineCapacity"
+
+1198
+
+--boundary
+Content-Disposition: form-data; name="isDamaged"
+
+false
+
+--boundary
+Content-Disposition: form-data; name="features[]"
+
+Air Conditioning, Power Windows
+
+--boundary
+Content-Disposition: form-data; name="images[]"; filename="test.jpg"
+
+< C:\Users\piotr\Desktop\Programowanie\Java\StarMoto\src\main\resources\test.jpg
