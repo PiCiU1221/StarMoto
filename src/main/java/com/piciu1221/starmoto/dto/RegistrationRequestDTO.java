@@ -1,10 +1,12 @@
 package com.piciu1221.starmoto.dto;
 
+import com.piciu1221.starmoto.validation.PasswordMatches;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+@PasswordMatches
 @Data
 public class RegistrationRequestDTO {
     @NotBlank(message = "Username is required")
@@ -22,4 +24,9 @@ public class RegistrationRequestDTO {
     @Size(min = 8, message = "Password must be at least 8 characters")
     @Size(max = 254, message = "Password can't be longer than 254 characters")
     private String password;
+
+    @NotBlank(message = "Matching password is required")
+    @Size(min = 8, message = "Matching password must be at least 8 characters")
+    @Size(max = 254, message = "Matching password can't be longer than 254 characters")
+    private String matchingPassword;
 }
