@@ -1,4 +1,4 @@
-POST localhost:8080/api/v1/adverts
+PUT localhost:8080/api/v1/adverts/6
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
@@ -14,7 +14,7 @@ Skoda Fabia
 --boundary
 Content-Disposition: form-data; name="description"
 
-Really cool fast car
+Even faster now
 
 --boundary
 Content-Disposition: form-data; name="locationId"

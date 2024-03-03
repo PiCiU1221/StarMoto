@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Data
-public class AdvertAddRequestDTO {
+public class AdvertPostRequestDTO {
     @NotNull(message = "Seller ID is required")
     @Positive(message = "Seller ID must be a positive integer")
     private Long sellerId;
