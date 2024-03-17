@@ -18,9 +18,8 @@ SELECT c.car_id,
        c.engine_power,
        c.engine_capacity,
        c.is_damaged,
-       -- Get features
        array_agg(DISTINCT f.feature_name) AS features,
-       -- Get image URLs
+       ic.collection_id AS image_collection_id,
        array_agg(DISTINCT i.image_url)    AS image_urls
 FROM cars c
          INNER JOIN car_makes make ON c.make_id = make.make_id
@@ -34,10 +33,11 @@ FROM cars c
          INNER JOIN car_seat_counts seats ON c.seats_id = seats.seat_count_id
          LEFT JOIN car_features_junction cf ON c.car_id = cf.car_id
          LEFT JOIN car_features f ON cf.feature_id = f.feature_id
-         INNER JOIN car_image_urls i ON c.car_id = i.car_id
+         INNER JOIN car_image_collections ic ON c.car_id = ic.car_id
+         INNER JOIN car_image_urls i ON c.car_id = ic.car_id
 GROUP BY c.car_id, make.make_name, model.model_name, body_type.body_type_name,
          color.color_name, fuel_type.fuel_type_name, transmission.transmission_type_name,
-         drivetrain.drivetrain_type_name, doors.door_count, seats.seat_count;
+         drivetrain.drivetrain_type_name, doors.door_count, seats.seat_count, ic.collection_id;
 
 
 -- Select every advertisement
@@ -64,9 +64,8 @@ SELECT  a.advert_id,
         c.engine_power,
         c.engine_capacity,
         c.is_damaged,
-        -- Get features
         array_agg(DISTINCT f.feature_name) AS features,
-        -- Get image URLs
+        ic.collection_id AS image_collection_id,
         array_agg(DISTINCT i.image_url)    AS image_urls
 FROM adverts a
          INNER JOIN users u ON a.seller_id = u.user_id
@@ -84,7 +83,8 @@ FROM adverts a
          INNER JOIN car_seat_counts seats ON c.seats_id = seats.seat_count_id
          LEFT JOIN car_features_junction fj ON c.car_id = fj.car_id
          LEFT JOIN car_features f ON fj.feature_id = f.feature_id
-         INNER JOIN car_image_urls i ON c.car_id = i.car_id
+         INNER JOIN car_image_collections ic ON c.car_id = ic.car_id
+         INNER JOIN car_image_urls i ON c.car_id = ic.car_id
 GROUP BY a.advert_id, u.username, a.title, a.description, l.city, a.price, c.car_id, make.make_name, model.model_name,
          body_type.body_type_name, color.color_name, fuel_type.fuel_type_name, transmission.transmission_type_name,
-         drivetrain.drivetrain_type_name, doors.door_count, seats.seat_count;
+         drivetrain.drivetrain_type_name, doors.door_count, seats.seat_count, ic.collection_id;

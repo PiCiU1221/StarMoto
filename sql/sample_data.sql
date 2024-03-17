@@ -154,21 +154,27 @@ VALUES ('Air Conditioning'),
 
 -- First car
 WITH inserted_car AS (
-INSERT INTO cars (vin, make_id, model_id, body_type_id, color_id, fuel_type_id, transmission_type_id, drivetrain_id, doors_id, seats_id, production_year, mileage, engine_power, engine_capacity, is_damaged)
-VALUES
-    ('ABC12345678901234', 1, 3, 8, 6, 4, 1, 2, 4, 5, 2017, 40000, 180, 2200, FALSE)
-    RETURNING car_id
+    INSERT INTO cars (vin, make_id, model_id, body_type_id, color_id, fuel_type_id, transmission_type_id, drivetrain_id, doors_id, seats_id, production_year, mileage, engine_power, engine_capacity, is_damaged)
+        VALUES
+            ('ABC12345678901234', 1, 3, 8, 6, 4, 1, 2, 4, 5, 2017, 40000, 180, 2200, FALSE)
+            RETURNING car_id
+    ),
+
+    image_collection AS (
+        INSERT INTO car_image_collections (car_id)
+            SELECT car_id FROM inserted_car
+            RETURNING collection_id
     ),
 
     inserted_images AS (
-INSERT INTO car_image_urls (car_id, image_url)
-SELECT inserted_car.car_id, images.image_url
-FROM inserted_car, (VALUES
-    ('https://iili.io/Ja9nYej.jpg'),
-    ('https://iili.io/Jad72se.jpg'))
-    AS images(image_url)
+        INSERT INTO car_image_urls (collection_id, image_url)
+            SELECT image_collection.collection_id, images.image_url
+            FROM image_collection,
+            (VALUES
+                ('https://iili.io/Ja9nYej.jpg'),
+                ('https://iili.io/Jad72se.jpg')
+            ) AS images(image_url)
     )
-
 INSERT INTO car_features_junction (car_id, feature_id)
 SELECT inserted_car.car_id, features.feature_id
 FROM inserted_car, (VALUES (1), (2), (3)) AS features(feature_id);

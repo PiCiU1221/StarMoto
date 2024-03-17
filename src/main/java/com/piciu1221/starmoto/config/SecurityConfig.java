@@ -23,20 +23,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                                // Allow access to authentication endpoint for all
-                                //.requestMatchers("/api/user/register", "/api/auth/login", "/api/adverts").permitAll()
+                        // Allow access to authentication endpoint for all
+                        //.requestMatchers("/api/user/register", "/api/auth/login", "/api/adverts").permitAll()
 
-                                // Require authentication for any other requests
-                                //.anyRequest().authenticated()
-                                .anyRequest().permitAll()
-                /*)
-                .formLogin(form -> form
-                        .loginPage("/api/auth/login")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
-                        .permitAll()*/
+                        // Require authentication for any other requests
+                        //.anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }

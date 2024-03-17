@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +34,7 @@ public class AdvertService {
     private final CarService carService;
 
     @Transactional
-    public AdvertResponseDTO addAdvert(@Valid AdvertPostRequestDTO advertPOSTRequestDTO) throws IOException {
+    public AdvertResponseDTO addAdvert(@Valid AdvertPostRequestDTO advertPOSTRequestDTO) {
 
         Advert advert = new Advert();
 
@@ -78,7 +78,7 @@ public class AdvertService {
     }
 
     @Transactional
-    public AdvertResponseDTO updateAdvert(Long id, @Valid AdvertPostRequestDTO advertPOSTRequestDTO) throws IOException {
+    public AdvertResponseDTO updateAdvert(Long id, @Valid AdvertPostRequestDTO advertPOSTRequestDTO) {
         Advert advert = advertRepository.findById(id)
                 .orElseThrow(() -> new AdvertNotFoundException("Advert with ID " + id + " not found"));
 
@@ -112,6 +112,16 @@ public class AdvertService {
         }
         advert.getPhoneNumbers().addAll(advertPhoneNumbers);
 
+        advert.setUpdatedAt(LocalDateTime.now());
+
         return new AdvertResponseDTO(advertRepository.save(advert));
+    }
+
+    @Transactional
+    public void deleteAdvert(Long id) {
+        Advert advert = advertRepository.findById(id)
+                .orElseThrow(() -> new AdvertNotFoundException("Advert with ID " + id + " not found"));
+
+        advertRepository.delete(advert);
     }
 }

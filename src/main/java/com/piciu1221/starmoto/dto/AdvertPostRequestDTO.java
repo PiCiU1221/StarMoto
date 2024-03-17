@@ -1,8 +1,10 @@
 package com.piciu1221.starmoto.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -83,8 +85,4 @@ public class AdvertPostRequestDTO {
 
     @Size(max = 7, message = "Up to 7 features are allowed")
     private List<String> features;
-
-    @NotNull(message = "Images are required")
-    @NotEmpty(message = "Images list cannot be empty")
-    private List<MultipartFile> images;
 }

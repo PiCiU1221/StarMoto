@@ -2,7 +2,6 @@ package com.piciu1221.starmoto.model.carReference;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.piciu1221.starmoto.model.Car;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,9 +20,9 @@ public class CarImageUrl {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "car_id")
+    @JoinColumn(name = "collection_id", nullable = false)
     @NotNull
-    private Car car;
+    private CarImageCollection collection;
 
     @Column(name = "image_url", nullable = false)
     @NotBlank

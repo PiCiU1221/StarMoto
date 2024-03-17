@@ -1,0 +1,7 @@
+POST localhost:8080/api/v1/imageCollections/1/images
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="images[]"; filename="test.jpg"
+
+< C:\Users\piotr\Desktop\Programowanie\Java\StarMoto\src\main\resources\test.jpg

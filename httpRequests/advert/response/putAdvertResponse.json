@@ -1,8 +1,8 @@
 {
-  "advertId": 8,
-  "sellerId": 2,
+  "advertId": 1,
+  "sellerId": 1,
   "title": "Skoda Fabia",
-  "description": "Really cool fast car",
+  "description": "Even faster now",
   "city": "Stargard",
   "price": 25000,
   "phoneNumbers": [
@@ -29,8 +29,6 @@
       "Air Conditioning",
       "Power Windows"
     ],
-    "imageUrls": [
-      "https://iili.io/J1pAHwF.jpg"
-    ]
+    "imageCollectionId": 1
   }
 }
