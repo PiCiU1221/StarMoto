@@ -2,7 +2,6 @@ package com.piciu1221.starmoto.dto;
 
 import com.piciu1221.starmoto.model.Car;
 import com.piciu1221.starmoto.model.carReference.CarFeature;
-import com.piciu1221.starmoto.model.carReference.CarImageUrl;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class CarAddResponseDTO {
     private Boolean isDamaged;
 
     private List<String> features;
-    private List<String> imageUrls;
+    private Long imageCollectionId;
 
     public CarAddResponseDTO(Car car) {
         this.carId = car.getCarId();
@@ -58,14 +57,6 @@ public class CarAddResponseDTO {
 
         this.features = features;
 
-        // Car imagesUrls
-        List<CarImageUrl> carImages = car.getImages();
-        List<String> images = new ArrayList<>();
-
-        for (CarImageUrl image : carImages) {
-            images.add(image.getImageUrl());
-        }
-
-        this.imageUrls = images;
+        this.setImageCollectionId(car.getImageCollection().getCollectionId());
     }
 }

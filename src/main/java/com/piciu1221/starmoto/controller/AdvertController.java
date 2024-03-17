@@ -24,8 +24,8 @@ public class AdvertController {
         this.advertService = advertService;
     }
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<?> addAdvert(@Valid AdvertPostRequestDTO advertPOSTRequestDTO) {
+    @PostMapping
+    public ResponseEntity<?> addAdvert(@Valid @RequestBody AdvertPostRequestDTO advertPOSTRequestDTO) {
         try {
             AdvertResponseDTO savedAdvert = advertService.addAdvert(advertPOSTRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -35,7 +35,7 @@ public class AdvertController {
                     .body(new ApiErrorResponse("AdvertAddException", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred: " + e.getMessage()));
+                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
         }
     }
 
@@ -50,12 +50,12 @@ public class AdvertController {
                     .body(new ApiErrorResponse("AdvertNotFoundException", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred: " + e.getMessage()));
+                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
         }
     }
 
-    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateAdvert(@PathVariable Long id, @Valid AdvertPostRequestDTO advertPOSTRequestDTO) {
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateAdvert(@PathVariable Long id, @Valid @RequestBody AdvertPostRequestDTO advertPOSTRequestDTO) {
         try {
             AdvertResponseDTO updatedAdvert = advertService.updateAdvert(id, advertPOSTRequestDTO);
             return ResponseEntity.status(HttpStatus.OK)
@@ -68,7 +68,22 @@ public class AdvertController {
                     .body(new ApiErrorResponse("AdvertUpdateException", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred: " + e.getMessage()));
+                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAdvert(@PathVariable Long id) {
+        try {
+            advertService.deleteAdvert(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .build();
+        } catch (AdvertNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiErrorResponse("AdvertNotFoundException", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
         }
     }
 }

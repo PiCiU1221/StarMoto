@@ -1,9 +1,9 @@
 package com.piciu1221.starmoto.dto;
 
 import com.piciu1221.starmoto.model.Advert;
+import com.piciu1221.starmoto.model.Car;
 import com.piciu1221.starmoto.model.advertReference.AdvertPhoneNumber;
 import com.piciu1221.starmoto.model.carReference.CarFeature;
-import com.piciu1221.starmoto.model.carReference.CarImageUrl;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -40,25 +40,27 @@ public class AdvertResponseDTO {
 
         this.phoneNumbers = phoneNumbers;
 
+        Car car = advert.getCar();
+
         this.carInfo = new CarInfo();
-        this.carInfo.setVin(advert.getCar().getVin());
-        this.carInfo.setMake(advert.getCar().getMake().getMakeName());
-        this.carInfo.setModel(advert.getCar().getModel().getModelName());
-        this.carInfo.setBodyType(advert.getCar().getBodyType().getBodyTypeName());
-        this.carInfo.setColor(advert.getCar().getColor().getColorName());
-        this.carInfo.setFuelType(advert.getCar().getFuelType().getFuelTypeName());
-        this.carInfo.setTransmissionType(advert.getCar().getTransmissionType().getTransmissionTypeName());
-        this.carInfo.setDrivetrainType(advert.getCar().getDrivetrainType().getDrivetrainTypeName());
-        this.carInfo.setDoorsCount(advert.getCar().getDoors().getDoorCount());
-        this.carInfo.setSeatsCount(advert.getCar().getSeats().getSeatsCount());
-        this.carInfo.setProductionYear(advert.getCar().getProductionYear());
-        this.carInfo.setMileage(advert.getCar().getMileage());
-        this.carInfo.setEnginePower(advert.getCar().getEnginePower());
-        this.carInfo.setEngineCapacity(advert.getCar().getEngineCapacity());
-        this.carInfo.setIsDamaged(advert.getCar().getIsDamaged());
+        this.carInfo.setVin(car.getVin());
+        this.carInfo.setMake(car.getMake().getMakeName());
+        this.carInfo.setModel(car.getModel().getModelName());
+        this.carInfo.setBodyType(car.getBodyType().getBodyTypeName());
+        this.carInfo.setColor(car.getColor().getColorName());
+        this.carInfo.setFuelType(car.getFuelType().getFuelTypeName());
+        this.carInfo.setTransmissionType(car.getTransmissionType().getTransmissionTypeName());
+        this.carInfo.setDrivetrainType(car.getDrivetrainType().getDrivetrainTypeName());
+        this.carInfo.setDoorsCount(car.getDoors().getDoorCount());
+        this.carInfo.setSeatsCount(car.getSeats().getSeatsCount());
+        this.carInfo.setProductionYear(car.getProductionYear());
+        this.carInfo.setMileage(car.getMileage());
+        this.carInfo.setEnginePower(car.getEnginePower());
+        this.carInfo.setEngineCapacity(car.getEngineCapacity());
+        this.carInfo.setIsDamaged(car.getIsDamaged());
 
         // Car features
-        List<CarFeature> carFeatures = advert.getCar().getFeatures();
+        List<CarFeature> carFeatures = car.getFeatures();
         List<String> features = new ArrayList<>();
 
         for (CarFeature feature : carFeatures) {
@@ -67,15 +69,7 @@ public class AdvertResponseDTO {
 
         this.carInfo.setFeatures(features);
 
-        // Car imagesUrls
-        List<CarImageUrl> carImages = advert.getCar().getImages();
-        List<String> images = new ArrayList<>();
-
-        for (CarImageUrl image : carImages) {
-            images.add(image.getImageUrl());
-        }
-
-        this.carInfo.setImageUrls(images);
+        this.carInfo.setImageCollectionId(car.getImageCollection().getCollectionId());
     }
 
     @Data
@@ -96,6 +90,6 @@ public class AdvertResponseDTO {
         private Integer engineCapacity;
         private Boolean isDamaged;
         private List<String> features;
-        private List<String> imageUrls;
+        private Long imageCollectionId;
     }
 }

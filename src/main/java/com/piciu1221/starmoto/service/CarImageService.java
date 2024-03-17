@@ -2,7 +2,6 @@ package com.piciu1221.starmoto.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.piciu1221.starmoto.exception.AdvertAddException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -45,13 +44,9 @@ public class CarImageService {
         body.add("source", base64Image);
         body.add("format", "json");
 
-        // Create the RestTemplate instance
         RestTemplate restTemplate = new RestTemplate();
-
-        // Define the endpoint URL
         String apiUrl = "https://freeimage.host/api/1/upload";
 
-        // Make the HTTP POST request
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 apiUrl,
                 HttpMethod.POST,
@@ -59,12 +54,11 @@ public class CarImageService {
                 String.class
         );
 
-        // Check if the request was successful
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             String responseBody = responseEntity.getBody();
             return extractImageUrlFromResponse(responseBody);
         } else {
-            throw new AdvertAddException("Error uploading image: " + responseEntity.getStatusCode() + " - " + responseEntity.getBody());
+            throw new IOException("Error uploading image: " + responseEntity.getStatusCode() + " - " + responseEntity.getBody());
         }
     }
 
@@ -72,7 +66,6 @@ public class CarImageService {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
 
-        // Extract the image URL from Freeimage.host API response
         return jsonNode.path("image").path("url").asText();
     }
 

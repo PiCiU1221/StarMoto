@@ -1,11 +1,9 @@
 package com.piciu1221.starmoto.dto;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -64,10 +62,6 @@ public class CarAddRequestDTO {
     @Size(max = 7, message = "Up to 7 features are allowed")
     private List<String> features;
 
-    @NotNull(message = "Images are required")
-    @NotEmpty(message = "Images list cannot be empty")
-    private List<MultipartFile> images;
-
     public CarAddRequestDTO(AdvertPostRequestDTO advertPOSTRequestDTO) {
         this.vin = advertPOSTRequestDTO.getVin();
         this.make = advertPOSTRequestDTO.getMake();
@@ -86,6 +80,5 @@ public class CarAddRequestDTO {
         this.isDamaged = advertPOSTRequestDTO.getIsDamaged();
 
         this.features = advertPOSTRequestDTO.getFeatures();
-        this.images = advertPOSTRequestDTO.getImages();
     }
 }

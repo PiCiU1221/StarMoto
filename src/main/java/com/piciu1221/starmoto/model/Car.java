@@ -103,7 +103,6 @@ public class Car {
     @Size(max = 7, message = "Up to 7 features are allowed")
     private List<CarFeature> features;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "car_id", updatable = false)
-    private List<CarImageUrl> images;
+    @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private CarImageCollection imageCollection;
 }

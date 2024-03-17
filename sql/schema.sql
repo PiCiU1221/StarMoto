@@ -103,19 +103,29 @@ CREATE TABLE car_features
     feature_name VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE car_image_urls
-(
-    image_id   BIGSERIAL PRIMARY KEY,
-    car_id     BIGINT REFERENCES cars (car_id) ON DELETE CASCADE NOT NULL,
-    image_url  VARCHAR(255)                                      NOT NULL,
-    created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP            NOT NULL
-);
-
 CREATE TABLE car_features_junction
 (
     car_id     BIGINT REFERENCES cars (car_id) ON DELETE CASCADE             NOT NULL,
     feature_id BIGINT REFERENCES car_features (feature_id) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (car_id, feature_id)
+);
+
+
+-- Image collections table
+
+CREATE TABLE car_image_collections
+(
+    collection_id BIGSERIAL PRIMARY KEY,
+    car_id        BIGINT REFERENCES cars (car_id) ON DELETE CASCADE NOT NULL,
+    updated_at    TIMESTAMP(0) DEFAULT NULL
+);
+
+CREATE TABLE car_image_urls
+(
+    image_id      BIGSERIAL PRIMARY KEY,
+    collection_id BIGINT REFERENCES car_image_collections (collection_id) ON DELETE CASCADE NOT NULL,
+    image_url     VARCHAR(255)                                                              NOT NULL,
+    created_at    TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP                                    NOT NULL
 );
 
 

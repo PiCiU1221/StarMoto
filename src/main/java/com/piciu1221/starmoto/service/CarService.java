@@ -5,17 +5,14 @@ import com.piciu1221.starmoto.exception.AdvertAddException;
 import com.piciu1221.starmoto.exception.AdvertUpdateException;
 import com.piciu1221.starmoto.model.Car;
 import com.piciu1221.starmoto.model.carReference.CarFeature;
-import com.piciu1221.starmoto.model.carReference.CarImageUrl;
-import com.piciu1221.starmoto.repository.CarImageRepository;
+import com.piciu1221.starmoto.model.carReference.CarImageCollection;
 import com.piciu1221.starmoto.repository.CarRepository;
 import com.piciu1221.starmoto.repository.carReference.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +31,10 @@ public class CarService {
     private final CarSeatCountRepository carSeatCountRepository;
     private final CarDrivetrainTypeRepository carDrivetrainTypeRepository;
     private final CarFeatureRepository carFeatureRepository;
-    private final CarImageRepository carImageRepository;
-
-    private final CarImageService carImageService;
+    private final CarImageCollectionRepository carImageCollectionRepository;
 
     @Transactional
-    public Car addCar(@Valid CarAddRequestDTO carAddRequestDTO) throws IOException {
+    public Car addCar(@Valid CarAddRequestDTO carAddRequestDTO) {
 
         Car car = new Car();
 
@@ -96,37 +91,18 @@ public class CarService {
 
         car = carRepository.save(car);
 
-        // Car images
-        List<MultipartFile> images = carAddRequestDTO.getImages();
-        List<CarImageUrl> carImageUrls = new ArrayList<>();
+        CarImageCollection carImageCollection = new CarImageCollection();
+        carImageCollection.setCar(car);
 
-        for (MultipartFile image : images) {
-            String imageUrl;
+        car.setImageCollection(carImageCollection);
 
-            try {
-                imageUrl = carImageService.uploadImage(image);
-            } catch (AdvertAddException e) {
-                throw new AdvertAddException(e.getMessage());
-            }
-
-            if (imageUrl != null) {
-                CarImageUrl carImageUrl = new CarImageUrl();
-                carImageUrl.setImageUrl(imageUrl);
-                carImageUrl.setCar(car);
-
-                carImageUrls.add(carImageUrl);
-            } else {
-                throw new AdvertAddException("Failed to upload one or more images");
-            }
-        }
-
-        car.setImages(carImageUrls);
+        carImageCollectionRepository.save(carImageCollection);
 
         return car;
     }
 
     @Transactional
-    public Car updateCar(Long id, @Valid CarAddRequestDTO carAddRequestDTO) throws IOException {
+    public Car updateCar(Long id, @Valid CarAddRequestDTO carAddRequestDTO) {
         Car car = carRepository.findById(id)
                 // We should never get here, as the car has the same ID as the advert, but just in case
                 .orElseThrow(() -> new AdvertUpdateException("Car with ID " + id + " not found"));
@@ -182,45 +158,6 @@ public class CarService {
 
         car.setFeatures(carFeatures);
 
-        // Car images
-        // Clear the old images
-        /* TODO: Come up with a better way to handle this
-            We can't compare if the updated image is in the database now
-            At this moment I just delete all the old images and add the new ones
-            Maybe I could add some unique hashcode for the uploaded images
-            That would be generated when the image is uploaded and then
-            I could store it in a field in the car_image_urls table and
-            compare it instead.
-         */
-        carImageRepository.deleteAll(car.getImages());
-        car.getImages().clear();
-
-        List<MultipartFile> images = carAddRequestDTO.getImages();
-        List<CarImageUrl> carImageUrls = new ArrayList<>();
-
-        for (MultipartFile image : images) {
-            String imageUrl;
-
-            try {
-                imageUrl = carImageService.uploadImage(image);
-            } catch (AdvertAddException e) {
-                throw new AdvertUpdateException(e.getMessage());
-            }
-
-            if (imageUrl != null) {
-                CarImageUrl carImageUrl = new CarImageUrl();
-                carImageUrl.setImageUrl(imageUrl);
-                carImageUrl.setCar(car);
-
-                carImageUrls.add(carImageUrl);
-            } else {
-                throw new AdvertUpdateException("Failed to upload one or more images");
-            }
-        }
-
-        car.getImages().addAll(carImageUrls);
-
         return car;
     }
-
 }
