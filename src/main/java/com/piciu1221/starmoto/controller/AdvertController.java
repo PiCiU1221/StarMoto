@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,9 +26,12 @@ public class AdvertController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addAdvert(@Valid @RequestBody AdvertPostRequestDTO advertPOSTRequestDTO) {
+    public ResponseEntity<?> addAdvert(@Valid @RequestBody AdvertPostRequestDTO advertPOSTRequestDTO,
+                                       Authentication authentication) {
+        String username = authentication.getName();
+
         try {
-            AdvertResponseDTO savedAdvert = advertService.addAdvert(advertPOSTRequestDTO);
+            AdvertResponseDTO savedAdvert = advertService.addAdvert(advertPOSTRequestDTO, username);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(savedAdvert);
         } catch (AdvertAddException e) {
@@ -55,9 +59,13 @@ public class AdvertController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateAdvert(@PathVariable Long id, @Valid @RequestBody AdvertPostRequestDTO advertPOSTRequestDTO) {
+    public ResponseEntity<?> updateAdvert(@PathVariable Long id,
+                                          @Valid @RequestBody AdvertPostRequestDTO advertPOSTRequestDTO,
+                                          Authentication authentication) {
+        String username = authentication.getName();
+
         try {
-            AdvertResponseDTO updatedAdvert = advertService.updateAdvert(id, advertPOSTRequestDTO);
+            AdvertResponseDTO updatedAdvert = advertService.updateAdvert(id, advertPOSTRequestDTO, username);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(updatedAdvert);
         } catch (AdvertNotFoundException e) {
@@ -73,9 +81,12 @@ public class AdvertController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAdvert(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAdvert(@PathVariable Long id,
+                                          Authentication authentication) {
+        String username = authentication.getName();
+
         try {
-            advertService.deleteAdvert(id);
+            advertService.deleteAdvert(id, username);
             return ResponseEntity.status(HttpStatus.OK)
                     .build();
         } catch (AdvertNotFoundException e) {

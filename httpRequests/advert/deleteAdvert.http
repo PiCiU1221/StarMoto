@@ -1,1 +1,2 @@
-DELETE http://localhost:8080/api/v1/adverts/2
+DELETE localhost:8080/api/v1/adverts/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJURVNUIiwiaWF0IjoxNzExMjkxOTc3LCJleHAiOjE3MTEzMDIwNTd9.sV2cATscg-GCm71bLai-virjt27xDasS_1dfjI8OrmY

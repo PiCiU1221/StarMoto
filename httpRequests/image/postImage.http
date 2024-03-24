@@ -1,5 +1,6 @@
-POST localhost:8080/api/v1/imageCollections/1/images
+POST localhost:8080/api/v1/imageCollections/5/images
 Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJURVNUIiwiaWF0IjoxNzExMjkxOTc3LCJleHAiOjE3MTEzMDIwNTd9.sV2cATscg-GCm71bLai-virjt27xDasS_1dfjI8OrmY
 
 --boundary
 Content-Disposition: form-data; name="images[]"; filename="test.jpg"

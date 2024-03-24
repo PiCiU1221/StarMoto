@@ -1,35 +1,34 @@
 {
-  "advertId": 1,
-  "sellerId": 1,
-  "title": "Volkswagen Passat",
-  "description": "Really nice Passat. Buy it pls.",
+  "advertId": 5,
+  "sellerId": 4,
+  "title": "Skoda Fabia",
+  "description": "Really cool fast car",
   "city": "Stargard",
-  "price": 99000,
+  "price": 25000,
   "phoneNumbers": [
-    "123456789",
-    "987654321"
+    "123454321",
+    "556677889"
   ],
   "carInfo": {
-    "vin": "ABC12345678901234",
-    "make": "Volkswagen",
-    "model": "Passat",
-    "bodyType": "Sedan",
-    "color": "Black",
-    "fuelType": "Diesel",
-    "transmissionType": "Automatic",
+    "vin": "1HGCM82633A000098",
+    "make": "Skoda",
+    "model": "Fabia",
+    "bodyType": "City Car",
+    "color": "Gray",
+    "fuelType": "Petrol",
+    "transmissionType": "Manual",
     "drivetrainType": "Front-Wheel Drive",
     "doorsCount": 4,
     "seatsCount": 5,
-    "productionYear": 2017,
-    "mileage": 40000,
-    "enginePower": 180,
-    "engineCapacity": 2200,
+    "productionYear": 2010,
+    "mileage": 51000,
+    "enginePower": 71,
+    "engineCapacity": 1198,
     "isDamaged": false,
     "features": [
       "Air Conditioning",
-      "Power Windows",
-      "Sunroof"
+      "Power Windows"
     ],
-    "imageCollectionId": 1
+    "imageCollectionId": 5
   }
 }

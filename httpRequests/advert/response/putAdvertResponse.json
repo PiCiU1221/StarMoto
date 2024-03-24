@@ -1,6 +1,6 @@
 {
-  "advertId": 1,
-  "sellerId": 1,
+  "advertId": 5,
+  "sellerId": 4,
   "title": "Skoda Fabia",
   "description": "Even faster now",
   "city": "Stargard",
@@ -29,6 +29,6 @@
       "Air Conditioning",
       "Power Windows"
     ],
-    "imageCollectionId": 1
+    "imageCollectionId": 5
   }
 }
