@@ -10,9 +10,6 @@ import java.util.List;
 
 @Data
 public class AdvertPostRequestDTO {
-    @NotNull(message = "Seller ID is required")
-    @Positive(message = "Seller ID must be a positive integer")
-    private Long sellerId;
 
     @NotNull(message = "Title is required")
     @Size(min = 5, message = "Title must be at least 5 characters long")

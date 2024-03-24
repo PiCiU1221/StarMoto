@@ -2,6 +2,8 @@ package com.piciu1221.starmoto.service;
 
 import com.piciu1221.starmoto.dto.ImageCollectionDeleteRequestDTO;
 import com.piciu1221.starmoto.dto.ImageCollectionPostRequest;
+import com.piciu1221.starmoto.exception.AdvertAddException;
+import com.piciu1221.starmoto.model.User;
 import com.piciu1221.starmoto.model.carReference.CarImageCollection;
 import com.piciu1221.starmoto.model.carReference.CarImageUrl;
 import com.piciu1221.starmoto.repository.carReference.CarImageCollectionRepository;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +27,19 @@ public class ImageCollectionService {
     private final CarImageService carImageService;
 
     @Transactional
-    public List<String> addImagesToCollection(Long collectionId, ImageCollectionPostRequest imageCollectionPostRequest) throws IOException {
+    public List<String> addImagesToCollection(Long collectionId,
+                                              ImageCollectionPostRequest imageCollectionPostRequest,
+                                              String username) throws IOException {
 
         CarImageCollection carImageCollection = carImageCollectionRepository.findById(collectionId)
                 .orElseThrow(() -> new IOException("Car image collection with ID " + collectionId + " not found"));
+
+        User owner = carImageCollection.getCar().getAdvert().getSeller();
+        String ownerUsername = owner.getUsername();
+
+        if (!Objects.equals(ownerUsername, username)) {
+            throw new AdvertAddException("You are not the owner of this advert. Cannot upload images.");
+        }
 
         List<CarImageUrl> carImageUrls = new ArrayList<>();
 
@@ -71,10 +83,19 @@ public class ImageCollectionService {
     }
 
     @Transactional
-    public void deleteImagesFromCollection(Long collectionId, ImageCollectionDeleteRequestDTO imageCollectionDeleteRequestDTO) throws IOException {
+    public void deleteImagesFromCollection(Long collectionId,
+                                           ImageCollectionDeleteRequestDTO imageCollectionDeleteRequestDTO,
+                                           String username) throws IOException {
 
         CarImageCollection carImageCollection = carImageCollectionRepository.findById(collectionId)
                 .orElseThrow(() -> new IOException("Car image collection with ID " + collectionId + " not found"));
+
+        User owner = carImageCollection.getCar().getAdvert().getSeller();
+        String ownerUsername = owner.getUsername();
+
+        if (!Objects.equals(ownerUsername, username)) {
+            throw new AdvertAddException("You are not the owner of this advert. Cannot delete images.");
+        }
 
         List<String> carImageUrls = imageCollectionDeleteRequestDTO.getImageUrls();
 

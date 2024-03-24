@@ -34,12 +34,14 @@ public class AdvertService {
     private final CarService carService;
 
     @Transactional
-    public AdvertResponseDTO addAdvert(@Valid AdvertPostRequestDTO advertPOSTRequestDTO) {
+    public AdvertResponseDTO addAdvert(
+            @Valid AdvertPostRequestDTO advertPOSTRequestDTO,
+            String username) {
 
         Advert advert = new Advert();
 
-        User seller = userRepository.findById(advertPOSTRequestDTO.getSellerId())
-                .orElseThrow(() -> new AdvertAddException("Seller with ID " + advertPOSTRequestDTO.getSellerId() + " not found"));
+        User seller = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AdvertAddException("User with username: " + username + " not found"));
         advert.setSeller(seller);
 
         CarAddRequestDTO carAddRequestDTO = new CarAddRequestDTO(advertPOSTRequestDTO);
@@ -78,12 +80,14 @@ public class AdvertService {
     }
 
     @Transactional
-    public AdvertResponseDTO updateAdvert(Long id, @Valid AdvertPostRequestDTO advertPOSTRequestDTO) {
+    public AdvertResponseDTO updateAdvert(Long id,
+                                          @Valid AdvertPostRequestDTO advertPOSTRequestDTO,
+                                          String username) {
         Advert advert = advertRepository.findById(id)
                 .orElseThrow(() -> new AdvertNotFoundException("Advert with ID " + id + " not found"));
 
-        if (!Objects.equals(advert.getSeller().getUserId(), advertPOSTRequestDTO.getSellerId())) {
-            throw new AdvertAddException("Seller ID is different from the original one. Cannot update seller ID.");
+        if (!Objects.equals(advert.getSeller().getUsername(), username)) {
+            throw new AdvertAddException("You are not the owner of this advert. Cannot update.");
         }
 
         CarAddRequestDTO carAddRequestDTO = new CarAddRequestDTO(advertPOSTRequestDTO);
@@ -118,9 +122,13 @@ public class AdvertService {
     }
 
     @Transactional
-    public void deleteAdvert(Long id) {
+    public void deleteAdvert(Long id, String username) {
         Advert advert = advertRepository.findById(id)
                 .orElseThrow(() -> new AdvertNotFoundException("Advert with ID " + id + " not found"));
+
+        if (!Objects.equals(advert.getSeller().getUsername(), username)) {
+            throw new AdvertAddException("You are not the owner of this advert. Cannot delete.");
+        }
 
         advertRepository.delete(advert);
     }

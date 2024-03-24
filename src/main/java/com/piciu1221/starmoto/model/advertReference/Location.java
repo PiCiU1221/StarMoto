@@ -23,7 +23,6 @@ public class Location {
 
     @Column(name = "postal_code", length = 6, nullable = false)
     @NotBlank
-    @Size(min = 6, max = 6)
     private String postalCode;
 
     @Column(name = "city", length = 100, nullable = false)
