@@ -44,14 +44,10 @@ public class ImageCollectionController {
     @GetMapping(value = "{collectionId}/images")
     public ResponseEntity<?> getImagesFromCollection(
             @PathVariable("collectionId") Long collectionId) {
-        try {
-            List<String> images = imageCollectionService.getImagesFromCollection(collectionId);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(images);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
-        }
+
+        List<String> images = imageCollectionService.getImagesFromCollection(collectionId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(images);
     }
 
     @DeleteMapping(value = "{collectionId}/images")
@@ -61,13 +57,9 @@ public class ImageCollectionController {
             Authentication authentication) {
         String username = authentication.getName();
 
-        try {
-            imageCollectionService.deleteImagesFromCollection(collectionId, imageCollectionDeleteRequestDTO, username);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
-        }
+
+        imageCollectionService.deleteImagesFromCollection(collectionId, imageCollectionDeleteRequestDTO, username);
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
     }
 }
