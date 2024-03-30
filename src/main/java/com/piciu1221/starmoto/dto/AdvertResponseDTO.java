@@ -52,7 +52,7 @@ public class AdvertResponseDTO {
         this.carInfo.setTransmissionType(car.getTransmissionType().getTransmissionTypeName());
         this.carInfo.setDrivetrainType(car.getDrivetrainType().getDrivetrainTypeName());
         this.carInfo.setDoorsCount(car.getDoors().getDoorCount());
-        this.carInfo.setSeatsCount(car.getSeats().getSeatsCount());
+        this.carInfo.setSeatsCount(car.getSeats().getSeatCount());
         this.carInfo.setProductionYear(car.getProductionYear());
         this.carInfo.setMileage(car.getMileage());
         this.carInfo.setEnginePower(car.getEnginePower());
