@@ -37,9 +37,6 @@ public class AdvertController {
         } catch (AdvertAddException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiErrorResponse("AdvertAddException", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
         }
     }
 
@@ -52,9 +49,6 @@ public class AdvertController {
         } catch (AdvertNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiErrorResponse("AdvertNotFoundException", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
         }
     }
 
@@ -74,9 +68,6 @@ public class AdvertController {
         } catch (AdvertUpdateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiErrorResponse("AdvertUpdateException", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
         }
     }
 
@@ -92,9 +83,6 @@ public class AdvertController {
         } catch (AdvertNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiErrorResponse("AdvertNotFoundException", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiErrorResponse("InternalServerError", e.getMessage()));
         }
     }
 }
