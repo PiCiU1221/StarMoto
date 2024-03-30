@@ -40,7 +40,7 @@ public class CarAddResponseDTO {
         this.transmissionType = car.getTransmissionType().getTransmissionTypeName();
         this.drivetrainType = car.getDrivetrainType().getDrivetrainTypeName();
         this.doors = car.getDoors().getDoorCount();
-        this.seats = car.getSeats().getSeatsCount();
+        this.seats = car.getSeats().getSeatCount();
         this.productionYear = car.getProductionYear();
         this.mileage = car.getMileage();
         this.enginePower = car.getEnginePower();

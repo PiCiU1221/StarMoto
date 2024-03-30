@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/adverts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/image-collections/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/car-references/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)

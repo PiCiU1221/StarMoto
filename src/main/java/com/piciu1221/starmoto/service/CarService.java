@@ -64,7 +64,7 @@ public class CarService {
         car.setDoors(carDoorCountRepository.findByDoorCount(carAddRequestDTO.getDoorsCount())
                 .orElseThrow(() -> new AdvertAddException("Car door count not found")));
 
-        car.setSeats(carSeatCountRepository.findBySeatsCount(carAddRequestDTO.getSeatsCount())
+        car.setSeats(carSeatCountRepository.findBySeatCount(carAddRequestDTO.getSeatsCount())
                 .orElseThrow(() -> new AdvertAddException("Car seat count not found")));
 
         car.setProductionYear(carAddRequestDTO.getProductionYear());
@@ -133,7 +133,7 @@ public class CarService {
         car.setDoors(carDoorCountRepository.findByDoorCount(carAddRequestDTO.getDoorsCount())
                 .orElseThrow(() -> new AdvertUpdateException("Car door count not found")));
 
-        car.setSeats(carSeatCountRepository.findBySeatsCount(carAddRequestDTO.getSeatsCount())
+        car.setSeats(carSeatCountRepository.findBySeatCount(carAddRequestDTO.getSeatsCount())
                 .orElseThrow(() -> new AdvertUpdateException("Car seat count not found")));
 
         car.setProductionYear(carAddRequestDTO.getProductionYear());

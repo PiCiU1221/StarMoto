@@ -11,9 +11,9 @@ public class CarSeatCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seat_count_id")
-    private Long seatsId;
+    private Long seatCountId;
 
     @Column(name = "seat_count", nullable = false, unique = true)
     @NotNull
-    private Integer seatsCount;
+    private Integer seatCount;
 }

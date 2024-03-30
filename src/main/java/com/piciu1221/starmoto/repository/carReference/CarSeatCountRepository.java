@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface CarSeatCountRepository extends JpaRepository<CarSeatCount, Long> {
-    Optional<CarSeatCount> findBySeatsCount(Integer seatsCount);
+    Optional<CarSeatCount> findBySeatCount(Integer seatsCount);
 }

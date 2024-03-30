@@ -3,6 +3,7 @@ package com.piciu1221.starmoto.service;
 import com.piciu1221.starmoto.dto.ImageCollectionDeleteRequestDTO;
 import com.piciu1221.starmoto.dto.ImageCollectionPostRequest;
 import com.piciu1221.starmoto.exception.AdvertAddException;
+import com.piciu1221.starmoto.exception.ImageCollectionNotFoundException;
 import com.piciu1221.starmoto.model.User;
 import com.piciu1221.starmoto.model.carReference.CarImageCollection;
 import com.piciu1221.starmoto.model.carReference.CarImageUrl;
@@ -32,7 +33,7 @@ public class ImageCollectionService {
                                               String username) throws IOException {
 
         CarImageCollection carImageCollection = carImageCollectionRepository.findById(collectionId)
-                .orElseThrow(() -> new IOException("Car image collection with ID " + collectionId + " not found"));
+                .orElseThrow(() -> new ImageCollectionNotFoundException("Car image collection with ID " + collectionId + " not found"));
 
         User owner = carImageCollection.getCar().getAdvert().getSeller();
         String ownerUsername = owner.getUsername();
@@ -66,10 +67,10 @@ public class ImageCollectionService {
     }
 
     @Transactional
-    public List<String> getImagesFromCollection(Long collectionId) throws IOException {
+    public List<String> getImagesFromCollection(Long collectionId) {
 
         CarImageCollection carImageCollection = carImageCollectionRepository.findById(collectionId)
-                .orElseThrow(() -> new IOException("Car image collection with ID " + collectionId + " not found"));
+                .orElseThrow(() -> new ImageCollectionNotFoundException("Car image collection with ID " + collectionId + " not found"));
 
         List<CarImageUrl> carImageUrls = carImageCollection.getImages();
 
@@ -85,10 +86,10 @@ public class ImageCollectionService {
     @Transactional
     public void deleteImagesFromCollection(Long collectionId,
                                            ImageCollectionDeleteRequestDTO imageCollectionDeleteRequestDTO,
-                                           String username) throws IOException {
+                                           String username) {
 
         CarImageCollection carImageCollection = carImageCollectionRepository.findById(collectionId)
-                .orElseThrow(() -> new IOException("Car image collection with ID " + collectionId + " not found"));
+                .orElseThrow(() -> new ImageCollectionNotFoundException("Car image collection with ID " + collectionId + " not found"));
 
         User owner = carImageCollection.getCar().getAdvert().getSeller();
         String ownerUsername = owner.getUsername();
