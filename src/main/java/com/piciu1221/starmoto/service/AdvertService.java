@@ -15,6 +15,9 @@ import com.piciu1221.starmoto.repository.UserRepository;
 import com.piciu1221.starmoto.repository.advertReference.LocationRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,6 +73,19 @@ public class AdvertService {
         advert.setPhoneNumbers(advertPhoneNumbers);
 
         return new AdvertResponseDTO(advertRepository.save(advert));
+    }
+
+    public List<AdvertResponseDTO> getAllAdverts(int page, int size) {
+        if (size > 30) {
+            size = 30;
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "advertId"));
+
+        return advertRepository.findAll(pageable)
+                .stream()
+                .map(AdvertResponseDTO::new)
+                .toList();
     }
 
     public AdvertResponseDTO getAdvertById(Long id) {

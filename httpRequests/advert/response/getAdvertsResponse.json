@@ -1,0 +1,72 @@
+[
+  {
+    "advertId": 5,
+    "sellerId": 4,
+    "title": "Skoda Fabia",
+    "description": "Really cool fast car",
+    "city": "Stargard",
+    "price": 25000,
+    "phoneNumbers": [
+      "123454321",
+      "556677889"
+    ],
+    "carInfo": {
+      "vin": "1HGCM82633A000098",
+      "make": "Skoda",
+      "model": "Fabia",
+      "bodyType": "City Car",
+      "color": "Gray",
+      "fuelType": "Petrol",
+      "transmissionType": "Manual",
+      "drivetrainType": "Front-Wheel Drive",
+      "doorsCount": 4,
+      "seatsCount": 5,
+      "productionYear": 2010,
+      "mileage": 51000,
+      "enginePower": 71,
+      "engineCapacity": 1198,
+      "isDamaged": false,
+      "features": [
+        "Air Conditioning",
+        "Power Windows"
+      ],
+      "imageCollectionId": 5
+    }
+  },
+  {
+    "advertId": 4,
+    "sellerId": 1,
+    "title": "Opel Insignia",
+    "description": "Opel wow",
+    "city": "Gdańsk",
+    "price": 43000,
+    "phoneNumbers": [
+      "432101234"
+    ],
+    "carInfo": {
+      "vin": "ABC12345678901237",
+      "make": "Opel",
+      "model": "Insignia",
+      "bodyType": "Sedan",
+      "color": "Blue",
+      "fuelType": "Diesel",
+      "transmissionType": "Automatic",
+      "drivetrainType": "Front-Wheel Drive",
+      "doorsCount": 4,
+      "seatsCount": 5,
+      "productionYear": 2011,
+      "mileage": 150000,
+      "enginePower": 167,
+      "engineCapacity": 1996,
+      "isDamaged": false,
+      "features": [
+        "Air Conditioning",
+        "Power Windows",
+        "Sunroof",
+        "Bluetooth Connectivity",
+        "Navigation System"
+      ],
+      "imageCollectionId": 4
+    }
+  }
+]
