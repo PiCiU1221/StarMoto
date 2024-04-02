@@ -1,5 +1,6 @@
 package com.piciu1221.starmoto.controller;
 
+import com.piciu1221.starmoto.dto.AdvertFilterDTO;
 import com.piciu1221.starmoto.dto.AdvertPostRequestDTO;
 import com.piciu1221.starmoto.dto.AdvertResponseDTO;
 import com.piciu1221.starmoto.exception.AdvertAddException;
@@ -43,10 +44,11 @@ public class AdvertController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllAdverts(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<?> getAllAdverts(@ModelAttribute AdvertFilterDTO advertFilterDTO,
+                                           @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "10") int size) {
-        List<AdvertResponseDTO> adverts = advertService.getAllAdverts(page, size);
-        
+        List<AdvertResponseDTO> adverts = advertService.getAllAdverts(advertFilterDTO, page, size);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(adverts);
     }
