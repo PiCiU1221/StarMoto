@@ -31,7 +31,7 @@ Send a DELETE request to this endpoint `/api/v1/adverts/{your_adverts_id}`<br>
   Send a GET request to `/api/v1/adverts` with optional `page` and `size` parameters.
 
 - With filtering<br>
-  Send a GET request to `/api/v1/adverts` with optional parameters (and their dictonary GET endpoints):
+  Send a GET request to `/api/v1/adverts` with optional parameters (and their dictionary GET endpoints):
   - make
   - model
   - bodyType
@@ -72,4 +72,18 @@ Send a DELETE request to this endpoint `/api/v1/adverts/{your_adverts_id}`<br>
 
 # Swagger url and example requests with responses location
 
-Swagger url: ``
+Swagger url: `/swagger-ui/index.html`
+
+Example request are located at `/httpRequests` </br>and their responses at `/httpRequests/{requestType}/responses`
+
+# Example GET adverts request with filtering
+
+![Example Filter Request](screenshots/exampleGetAdvertsWithFiltersRequest.png)
+
+<b>Response</b>
+
+![Example Filter Request Response](screenshots/exampleGetAdvertsWithFiltersRequestResponse.png)
+
+# Database schema diagram
+
+![Database Diagram](screenshots/databaseDiagram.png)
