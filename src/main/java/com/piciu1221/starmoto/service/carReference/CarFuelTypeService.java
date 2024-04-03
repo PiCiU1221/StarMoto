@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CarFuelTypeService {
-    CarFuelTypeRepository carFuelTypeRepository;
+    private final CarFuelTypeRepository carFuelTypeRepository;
 
     public List<String> getAllFuelTypes() {
         List<CarFuelType> fuelTypes = carFuelTypeRepository.findAll();
