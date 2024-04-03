@@ -5,6 +5,8 @@ Used car marketplace RESTful API made in Java Spring Boot. Users can add their a
 - Java
 - Spring Boot
 - Spring Security
+- JWT
+- Hibernate
 - PostgreSQL
 - Swagger
 
