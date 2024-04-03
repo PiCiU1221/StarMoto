@@ -4,6 +4,7 @@ import com.piciu1221.starmoto.dto.LoginRequestDTO;
 import com.piciu1221.starmoto.dto.RegistrationRequestDTO;
 import com.piciu1221.starmoto.dto.RegistrationResponseDTO;
 import com.piciu1221.starmoto.exception.ApiErrorResponse;
+import com.piciu1221.starmoto.exception.AuthenticationFailedException;
 import com.piciu1221.starmoto.exception.RegistrationException;
 import com.piciu1221.starmoto.service.AuthService;
 import jakarta.validation.Valid;
@@ -42,6 +43,9 @@ public class AuthController {
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiErrorResponse("AuthenticationException", e.getMessage()));
+        } catch (AuthenticationFailedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiErrorResponse("AuthenticationFailedException", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiErrorResponse("InternalServerError", "Unexpected internal server error occurred."));

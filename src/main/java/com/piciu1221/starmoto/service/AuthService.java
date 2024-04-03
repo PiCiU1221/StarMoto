@@ -3,6 +3,7 @@ package com.piciu1221.starmoto.service;
 import com.piciu1221.starmoto.dto.LoginRequestDTO;
 import com.piciu1221.starmoto.dto.RegistrationRequestDTO;
 import com.piciu1221.starmoto.dto.RegistrationResponseDTO;
+import com.piciu1221.starmoto.exception.AuthenticationFailedException;
 import com.piciu1221.starmoto.exception.RegistrationException;
 import com.piciu1221.starmoto.model.User;
 import com.piciu1221.starmoto.repository.UserRepository;
@@ -41,15 +42,15 @@ public class AuthService {
             );
 
             User user = userRepository.findByUsername(loginRequestDTO.getUsername())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                    .orElseThrow(() -> new AuthenticationFailedException("User not found"));
 
             return jwtService.generateToken(user);
         } catch (BadCredentialsException e) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new AuthenticationFailedException("Invalid username or password");
         } catch (LockedException e) {
-            throw new IllegalArgumentException("Account locked. Please contact support.");
+            throw new AuthenticationFailedException("Account locked. Please contact support.");
         } catch (Exception e) {
-            throw new IllegalArgumentException("Login failed: " + e.getMessage(), e);
+            throw new AuthenticationFailedException("Login failed: " + e.getMessage(), e);
         }
     }
 

@@ -13,6 +13,8 @@ import java.util.List;
 public class AdvertSpecificationBuilder {
     public static Specification<Advert> buildSpecification(AdvertFilterDTO advertFilterDTO) {
         return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            
             List<Predicate> predicates = new ArrayList<>();
             Join<Advert, Car> carJoin = root.join("car");
 
