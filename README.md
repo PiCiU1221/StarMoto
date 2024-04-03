@@ -1,5 +1,5 @@
 # StarMoto
-Used car marketplace RESTful API made in Java Spring Boot. Users can add their adverts with pictures and search for existing ones.
+Used car marketplace RESTful API made in Java Spring Boot. Users can add their adverts with images and search for existing ones.
 
 # Tech stack
 - Java
