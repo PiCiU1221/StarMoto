@@ -12,7 +12,6 @@ Used car marketplace RESTful API made in Java Spring Boot. Users can add their a
 1. Create a new account using `/api/v1/auth/register` endpoint.
 2. Retrieve your JWT token from `/api/v1/auth/authenticate` endpoint using your credentials from the previous step.
 3. Send your advert in a json format using `/api/v1/adverts` endpoint attaching your JWT token in the header.
-4. Retrieve the advert ID from the request and use it to post a pictures of your car to '' endpoint
 
 # How to add images to my advert?
 Retrieve the advert ID from the advert POST request and use it to post a pictures of your car to `/api/v1/imageCollections/{your_adverts_id}/images` endpoint<br>
